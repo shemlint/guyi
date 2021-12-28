@@ -1,0 +1,113 @@
+{
+    "modules": [
+        [
+            {
+                "name": "3d test2",
+                "state": {},
+                "locals": {},
+                "propTypes": [],
+                "funcs": [
+                    {
+                        "name": "globals",
+                        "props": {},
+                        "events": {},
+                        "data": {},
+                        "eventRef": {}
+                    },
+                    {
+                        "args": "",
+                        "name": "load",
+                        "body": "let domRef = glob.getRef(\"comp1\");\nconsole.log(domRef);\nlet dom = domRef.current;\nconsole.log(dom);\n\nlet size = { w: dom.clientWidth, h: dom.clientHeight };\nconsole.log(size);\n\nvar scene = new THREE.Scene();\nvar camera = new THREE.PerspectiveCamera(45, size.w / size.h, 0.1, 1000);\nvar renderer = new THREE.WebGLRenderer();\n//renderer.setClearColorHex(0xEEEEEE);\nrenderer.setSize(size.w, size.h);\nrenderer.shadowMap.enabled = true;\nvar axes = new THREE.AxesHelper(20);\nscene.add(axes);\nvar planeGeometry = new THREE.PlaneGeometry(60, 20, 1, 1);\nvar planeMaterial = new THREE.MeshLambertMaterial({ color: 0xcccccc });\nvar plane = new THREE.Mesh(planeGeometry, planeMaterial);\nplane.rotation.x = -0.5 * Math.PI;\nplane.position.set(15, 0, 0);\nplane.receiveShadow = true;\nscene.add(plane);\nvar cubeGeometry = new THREE.BoxGeometry(4, 4, 4);\nvar cubeMaterial = new THREE.MeshLambertMaterial({\n  color: 0xff0000,\n  wireframe: false,\n});\nvar cube = new THREE.Mesh(cubeGeometry, cubeMaterial);\ncube.position.set(-4, 3, 0);\ncube.castShadow = true;\nscene.add(cube);\nvar sphereGeometry = new THREE.TorusKnotGeometry();\nvar sphereMaterial = new THREE.MeshPhongMaterial({\n  color: 0x7777ff,\n  wireframe: false,\n});\nvar sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);\nsphere.position.set(20, 9, 2);\nsphere.castShadow = true;\nscene.add(sphere);\n\nlet light = new THREE.DirectionalLight(); //new THREE.Color('red'),1)\nlight.position.set(40, 30, 5);\nlight.castShadow = true;\nscene.add(light);\n\ncamera.position.set(-20, 30, 20);\ncamera.lookAt(scene.position);\n\n//document.getElementById(\"WebGL-output\")\ndom.appendChild(renderer.domElement);\nlet clock = new THREE.Clock();\nfunction render() {\n  let delta = clock.getDelta();\n  cube.rotation.x += 0.5 * Math.PI * delta;\n  cube.rotation.y += 0.1 * Math.PI * delta;\n  sphere.rotation.x += 0.5 * Math.PI * delta;\n  sphere.rotation.y += 0.1 * Math.PI * delta;\n  scene.rotation += 0.01;\n  requestAnimationFrame(render);\n  renderer.render(scene, camera);\n}\nrender();\nreturn () => {\nconsole.log('scene clean up')\n  scene.traverse((obj) => {\n    if (obj.material) {\n      if (obj.material.map) {\n        obj.material.map.dispose();\n      }\n      obj.material.dispose();\n    }\n\n  });\n  renderer.dispose()\n\n};\n"
+                    },
+                    {
+                        "args": "a,b",
+                        "name": "sum",
+                        "body": "return a+b\n"
+                    }
+                ],
+                "localPT": [],
+                "localET": [],
+                "props": {},
+                "events": {}
+            },
+            {
+                "name": "Column",
+                "id": "root",
+                "props": {
+                    "children": [
+                        "comp1"
+                    ],
+                    "backgroundColor": "#f57a7a",
+                    "height": "100%"
+                },
+                "events": {}
+            },
+            {
+                "name": "View",
+                "id": "comp1",
+                "props": {
+                    "Ref": 14,
+                    "height": "100%",
+                    "margin": 0,
+                    "backgroundColor": "#99e66e"
+                },
+                "events": {}
+            }
+        ],
+        [
+            {
+                "name": "App",
+                "state": {},
+                "locals": {},
+                "funcs": [
+                    {
+                        "name": "globals",
+                        "props": {},
+                        "events": {},
+                        "data": {},
+                        "eventRef": {}
+                    }
+                ],
+                "localPT": [],
+                "localET": [],
+                "props": {},
+                "events": {}
+            },
+            {
+                "name": "Column",
+                "id": "root",
+                "props": {
+                    "children": [
+                        "comp3",
+                        "comp4"
+                    ],
+                    "backgroundColor": "#f57a7a",
+                    "height": "100%",
+                    "Ref": 98
+                },
+                "events": {}
+            },
+            {
+                "name": "3d test2",
+                "id": "comp2",
+                "props": {},
+                "events": {}
+            },
+            {
+                "name": "3d test2",
+                "id": "comp3",
+                "props": {},
+                "events": {}
+            },
+            {
+                "name": "3d test2",
+                "id": "comp4",
+                "props": {},
+                "events": {}
+            }
+        ]
+    ],
+    "comps": [],
+    "remodules": [],
+    "files": []
+}

@@ -1,0 +1,73 @@
+{
+  "name": "guyidesktop",
+  "version": "0.9.3",
+  "description": "Guyi runner for desktop",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron-forge start -- startapp,sharon",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "args":".\\node_modules\\.bin\\electron main.js startapp,sharon"
+  },
+  "author": "TSO",
+  "license": "ISC",
+  "devDependencies": {
+    "@electron-forge/cli": "^6.0.0-beta.59",
+    "@electron-forge/maker-deb": "^6.0.0-beta.59",
+    "@electron-forge/maker-rpm": "^6.0.0-beta.59",
+    "@electron-forge/maker-squirrel": "^6.0.0-beta.59",
+    "@electron-forge/maker-zip": "^6.0.0-beta.59",
+    "electron": "^13.1.9"
+  },
+  "dependencies": {
+    "brightness": "^3.0.0",
+    "conf": "^10.0.3",
+    "configstore": "^6.0.0",
+    "create-desktop-shortcuts": "^1.5.0",
+    "electron-squirrel-startup": "^1.0.0",
+    "express": "^4.17.1",
+    "express-fileupload": "^1.2.1",
+    "jimp": "^0.16.1",
+    "loudness": "^0.4.1",
+    "nodemon": "^2.0.15",
+    "png-to-ico": "^2.1.2",
+    "robotjs": "^0.6.0",
+    "say": "^0.16.0",
+    "screenshot-desktop": "^1.12.7",
+    "ws": "^8.2.3"
+  },
+  "config": {
+    "forge": {
+      "packagerConfig": {
+        "icon": "./icons/appicon"
+      },
+      "makers": [
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {
+            "name": "guyiwindows"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "darwin"
+          ]
+        },
+        {
+          "name": "@electron-forge/maker-deb",
+          "config": {
+            "option":{
+              "icon":"./icons/appicon.png"
+            }
+          }
+        },
+        {
+          "name": "@electron-forge/maker-rpm",
+          "config": {}
+        }
+      ]
+    }
+  }
+}
