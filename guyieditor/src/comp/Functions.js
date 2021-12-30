@@ -52,14 +52,14 @@ const Functions = ({ app, setApp }) => {
     }
     const testMethod = () => {
         try {
-            let inst = getCodeClass(code, []).instance
+            let inst = getCodeClass(code).instance
             inst[test]()
         } catch (e) {
             console.log(e)
         }
     }
    
-    let methods = getCodeClass(code, []).methods
+    let methods = getCodeClass(code).methods
     return (
         <div onKeyDown={keyDown}
             style={{ position: 'relative', height: '100%', display: 'flex', flexDirection: 'column' }}

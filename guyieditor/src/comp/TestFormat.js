@@ -130,13 +130,13 @@ const CompSmall = (props) => {
         window.addEventListener('codechange', reload)
         return ()=>window.removeEventListener('codechange',reload)
     })
-    return(<div>hiden</div>)
-    // if (off) {
-    //     return <div></div>
-    // }
-    // return (
-    //    <Comp {...props} />
-    // )
+    //return(<div>hiden</div>)
+    if (off) {
+        return <div></div>
+    }
+    return (
+       <Comp {...props} />
+    )
 }
 
 const TestFormat = () => {

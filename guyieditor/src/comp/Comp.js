@@ -71,10 +71,10 @@ const drawComp = (tree, id, prev = false, slData = {}, dynamic = false) => {
     const getEvent = (type) => {
         try {
             let m = events[type] || ''
-            let p = slData.class.instance[m]
+            let p = slData.class[m]
             if (typeof p === 'function') {
                 return (...args) => {
-                    try { return slData.class.instance[m](...args) }
+                    try { return slData.class[m](...args) }
                     catch (e) { console.warn(`Method ${type}[${m}] error ${e.message}`, e, slData.class) }
                 }
             } else {
@@ -288,7 +288,7 @@ const drawComp = (tree, id, prev = false, slData = {}, dynamic = false) => {
             try {
                 //eslint-disable-next-line
                 let anony = new Function('code', `return ${d[0]}`)
-                if (anony(slData.class.instance)) {
+                if (anony(slData.class)) {
                     let pos = tree.map(c => c.id).indexOf(d[1])
                     if (pos !== -1) {
                         tree[pos].props.Extras = Extras
@@ -359,12 +359,12 @@ const drawComp = (tree, id, prev = false, slData = {}, dynamic = false) => {
     }
     if (node.name === 'ReactRaw') {
         try {
-            const inst = slData.class.instance
+            const inst = slData.class
             if (typeof inst[props.Function] !== 'function') throw new Error(`(${props.Function}) Not a function`)
-            const childs=drawChilds('Children')
-            const reactComp = inst[props.Function]({children:childs})
+            const childs = drawChilds('Children')
+            const reactComp = inst[props.Function]({ children: childs })
             if (React.isValidElement(reactComp)) {
-                comp = <ErrorBoundary comp={reactComp}  />
+                comp = <ErrorBoundary comp={reactComp} />
             } else {
                 throw new Error('Not a react element')
             }
@@ -794,7 +794,7 @@ class Comp extends React.Component {
         this.state = {}
         this.parentData = {}
         this.propsEvents = {}
-        this.classInst = getCodeClass(props.tree[0].classCode, props.tree, props.prev, this)
+        this.classInst = getCodeClass(props.tree[0].classCode, props.prev, this).instance
         this.guyiInit()
     }
     componentDidMount() {
@@ -820,10 +820,10 @@ class Comp extends React.Component {
 
     runMagicFunc(name) {
         try {
-            if (this.classInst.instance[name]) {
-                this.classInst.instance[name]()
+            if (this.classInst[name]) {
+                this.classInst[name]()
             }
-        } catch (e) { console.log(`${this.props.tree[0].name} ${name} error`, e.message) }
+        } catch (e) { console.log(`${this.props.tree[0].name} ${name} error`, e.message,e) }
     }
     getParentData() {
         let { tree } = this.props
@@ -844,11 +844,11 @@ class Comp extends React.Component {
             index: initIndex,
             name: tree[0].name,
             props: tree[0].props, events: tree[0].events,
-            instance: this.classInst.instance,
+            instance: this.classInst,
         }
         this.parentData = parentData
-        this.classInst.instance.props = tree[0].props
-        // this.classInst.instance.extras=parentData
+        this.classInst.props = tree[0].props
+        // this.classInst.extras=parentData
         this.setEvents()
         return parentData
     }
@@ -869,7 +869,7 @@ class Comp extends React.Component {
                 })
             }
         })
-        this.classInst.instance.events = events
+        this.events = events
     }
 
     render() {

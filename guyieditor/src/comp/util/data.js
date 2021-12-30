@@ -501,7 +501,11 @@ const eventT = [
     { name: 'MSelect', events: [{ name: 'onChange', args: 'val' }] }
 ]
 
-const getCodeClass = (code, tree = [], prev = false, inst = {}) => {
+const getCodeClass = (code, prev = false, inst = {}) => {
+    let tree = []
+    if (inst.props && inst.props.tree) {
+        tree = inst.props.tree
+    }
     const mergeState = (...args) => {
         try {
             let tmpState = { ...inst.state }
@@ -517,12 +521,16 @@ const getCodeClass = (code, tree = [], prev = false, inst = {}) => {
     }
 
     const tiePS = (id, prop, value, defValue, warn = true) => {
-        let ids = tree.map(val => val.id)
-        let pos = ids.indexOf(id)
+        let locTree = []
+        if (inst.props && inst.props.tree) {
+            locTree = inst.props.tree
+        }
+        const ids = locTree.map(val => val.id)
+        const pos = ids.indexOf(id)
         if (pos === -1) return null
-        let props = tree[pos].props
+        let props = locTree[pos].props
         if (ids.includes(id)) {
-            let type = tree[ids.indexOf(id)].name
+            let type = locTree[ids.indexOf(id)].name
             let pts = propT.map(t => t.type)
             let pos = pts.indexOf(type)
             if (pos !== -1) {
@@ -591,9 +599,10 @@ const getCodeClass = (code, tree = [], prev = false, inst = {}) => {
         let instance = new c({
             getState: () => inst.state, tiePS, getRef, toFile, mergeState,
             getFile, reactClass: inst, setState: (s) => inst.setState(s),
-            getProps: () => inst.classInst.instance.props,
-            getEvents: () => inst.classInst.instance.events,
+            getProps: () => inst.props.tree[0].props,
+            getEvents: () => inst.events,
             getExtras: () => inst.parentData,
+            getp: () => inst.props.tree[0].props,
         })
         if (typeof instance === 'object') {
             let keys = Object.getOwnPropertyNames(instance).concat(Object.getOwnPropertyNames(instance.__proto__))
@@ -617,5 +626,5 @@ const getCodeClass = (code, tree = [], prev = false, inst = {}) => {
     return { instance: {}, keys: [], methods: [], props: [] }
 }
 
-export {propT,eventT,getCodeClass}
+export { propT, eventT, getCodeClass }
 
