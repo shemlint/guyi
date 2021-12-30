@@ -240,7 +240,7 @@ const propT = [
             { name: 'Children', prop: 'Children', type: 'comps', value: [] },
         ]
     },
-    {
+    {//mbutton
         type: 'MButton',
         props: [
             { name: 'Value', prop: 'Value', type: 'text', value: '' },
@@ -249,7 +249,6 @@ const propT = [
             { name: 'Size', prop: 'Size', type: 'select,small,medium,large' },
             { name: 'Disabled', prop: 'Disabled', type: 'bool', value: false },
             { name: 'Elevation', prop: 'Elevation', type: 'bool', value: false },
-            { name: 'Child', prop: 'Child', type: 'comp', value: [] }
         ]
     },
     {

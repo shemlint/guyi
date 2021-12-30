@@ -659,7 +659,7 @@ const Properties = ({
         }
         let props = localPropTypes[types.indexOf(type)].props
         props.forEach(({ name, prop, type, value }, pos) => {
-            //[prop] =value;
+            if(type==='event')return
             let comp = <Pm>Unkown</Pm>
             if (type === 'text') {
                 comp = <Text key={view.id + name} name={name} value={localProps[prop]} onChange={(text) => setProp(prop, text)} />
