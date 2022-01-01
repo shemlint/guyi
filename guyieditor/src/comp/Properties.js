@@ -40,14 +40,22 @@ export const Color = ({ name = '', color = '', onChange = () => { } }) => {
     const [scolor, setColor] = useState(color)
     const [open, setOpen] = useState(false)
     const [istext, setIstext] = useState(false)
+    const changeComplete = (col) => {
+        onChange(col)
+        let colors = get('lastcolors')
+        if (col.hex !== colors[0]) {
+            colors.unshift(col.hex)
+            set('lastcolors', colors.slice(0, 6))
+        }
+    }
     return (
         <Row onLeave={() => setOpen(false)} onClick={() => setOpen(true)} style={{ position: 'relative' }}>
             <Pm>{name}</Pm>
             <div style={{ minHeight: 20, backgroundColor: scolor, minWidth: 40 }} >{scolor}</div>
             {open && !istext &&
                 <div style={{ position: 'absolute', left: 0, top: 20, zIndex: 10 }}>
-                    <SketchPicker color={scolor}
-                        onChange={(col) => setColor(col.hex)} onChangeComplete={(col) => onChange(col)}
+                    <SketchPicker color={scolor} width={180} presetColors={[...get('lastcolors'), '#D0021B', '#F5A623', '#F8E71C', '#8B572A', '#7ED321', '#417505', '#BD10E0', '#9013FE', '#4A90E2', '#50E3C2', '#B8E986', '#000000', '#4A4A4A', '#9B9B9B', '#FFFFFF']}
+                        onChange={(col) => setColor(col.hex)} onChangeComplete={changeComplete}
                     />
                 </div>
             }
@@ -461,7 +469,7 @@ export const Conditional = ({ name = '', value = { data: [] }, props, onChange }
         return (
             <div style={{ border: '1px solid black', borderRadius: 3 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', margin: 2 }}>
-                    <EnterInput type='text' value={cond} readOnly={false} style={{ flex: 1 ,width:'80%'}}
+                    <EnterInput type='text' value={cond} readOnly={false} style={{ flex: 1, width: '80%' }}
                         onChange={(e) => setCond(e.target.value)} onEnter={condChange} />
                     <div onClick={condChange} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                         <MdSave size={20} color='blue' />
@@ -659,7 +667,7 @@ const Properties = ({
         }
         let props = localPropTypes[types.indexOf(type)].props
         props.forEach(({ name, prop, type, value }, pos) => {
-            if(type==='event')return
+            if (type === 'event') return
             let comp = <Pm>Unkown</Pm>
             if (type === 'text') {
                 comp = <Text key={view.id + name} name={name} value={localProps[prop]} onChange={(text) => setProp(prop, text)} />

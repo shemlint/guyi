@@ -79,6 +79,7 @@ global.schema = {
     lasttest:{def:''},
     mipmapopen:{def:true},
     restype:{def:'media'},
+    lastcolors:{def:['blue','red','green','purple','violet']}
 }
 const get = global.store.get
 const set = global.store.set
@@ -92,16 +93,19 @@ const newApp=[
 
         }],
         classCode:
-            `//write code for module here
+`//write code for module here
 class main {
-constructor({getState,setState,mergeState,tiePS,getRef}){
-    this.gs=getState
-    this.ss=setState
-    this.ms=mergeState
-    this.tiePS=tiePS
-    this.getRef=getRef
-}
-//put code below :)
+    constructor({ getState, setState, mergeState, tiePS, getRef, getProps, getEvents, getExtras }) {
+        this.gs = getState
+        this.ss = setState
+        this.ms = mergeState
+        this.tiePS = tiePS
+        this.getRef = getRef
+        this.gp = getProps
+        this.gv = getEvents
+        this.gx = getExtras
+    }
+    //put code below :)
 
 
 }

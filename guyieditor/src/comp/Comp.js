@@ -133,12 +133,14 @@ const drawComp = (tree, id, prev = false, slData = {}, dynamic = false) => {
     if (node.name === 'Column') {
         let styleProps = { ...props, children: '' }
         comp = <Column key={id} ref={getRef()} data={drawChilds('children')} styles={styleProps}
-            className={props.className} id={props.id} />
+            className={props.className} id={props.id} 
+            onClick={getEvent('onClick')} />
     }
     if (node.name === 'Row') {
         let styleProps = { ...props, children: '' }
         comp = <Row key={id} ref={getRef()} data={drawChilds('children')} styles={styleProps}
-            className={props.className} id={props.id} />
+            className={props.className} id={props.id}
+            onClick={getEvent('onClick')} />
     }
     if (node.name === 'View') {
         let backImage = ''
@@ -749,17 +751,22 @@ const drawComp = (tree, id, prev = false, slData = {}, dynamic = false) => {
 const updateApp = (tree) => {
     if (tree[0].funcs && tree[0].funcs.length > 1) {
         let funcs = tree[0].funcs
-        let code = `//code auto imported but with errors
-        class main {
-        constructor({getState,setState,mergeState,tiePS,getRef}){
-            this.gs=getState
-            this.ss=setState
-            this.ms=mergeState
-            this.tiePS=tiePS
-            this.getRef=getRef
-        }
-        //put code below :)
-        `
+        let code = 
+`//code auto imported but with errors
+class main {
+    constructor({ getState, setState, mergeState, tiePS, getRef, getProps, getEvents, getExtras }) {
+        this.gs = getState
+        this.ss = setState
+        this.ms = mergeState
+        this.tiePS = tiePS
+        this.getRef = getRef
+        this.gp = getProps
+        this.gv = getEvents
+        this.gx = getExtras
+    }
+    //put code below :)
+
+`
         funcs.forEach((f, i) => {
             if (i === 0) return
             code += `

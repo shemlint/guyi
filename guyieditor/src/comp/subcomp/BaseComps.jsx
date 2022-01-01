@@ -19,11 +19,11 @@ export const Button = React.forwardRef(
 
 
 export const Column = React.forwardRef(
-    ({ styles = {}, className, data = [], id
+    ({ styles = {}, className, data = [], id,onClick
     }, ref) => {
 
         return (
-            <div
+            <div onClick={onClick}
                 ref={ref}
                 className={className}
                 id={id}
@@ -65,10 +65,10 @@ export const Image = React.forwardRef(({
 
 export const Row = React.forwardRef(
     ({
-        styles = {}, data = [], className, id
+        styles = {}, data = [], className, id,onClick
     }, ref) => {
         return (
-            <div
+            <div onClick={onClick}
                 ref={ref}
                 style={{
                     ...styles,
