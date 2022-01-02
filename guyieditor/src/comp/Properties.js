@@ -609,7 +609,7 @@ const MapData = ({ name, value, onChange, types }) => {
 
 }
 
-const IdRow = ({ changeId, oid, app, type }) => {
+const IdRow = ({ changeId, oid, app, type,extras }) => {
     const [id, setId] = useState(oid)
     const [info, setInfo] = useState('')
     const disMes = (mes) => {
@@ -637,7 +637,7 @@ const IdRow = ({ changeId, oid, app, type }) => {
     return (
         <>
             <div style={{ display: 'flex', flexWrap: 'wrap', borderBottom: '1px solid blue' }} >
-                <div style={{ color: 'blue' }}>{`${type}-${oid}`}</div>
+                <div style={{ color: 'blue' }}>{`${extras||type}-${oid}`}</div>
                 <EnterInput type='text' value={id} onChange={(e) => setId(e.target.value)}
                     style={{ width: '80%' }}
                     onEnter={save}
@@ -773,7 +773,7 @@ const Properties = ({
 
     return (
         <div >
-            {showIdRow && <IdRow changeId={changeId} oid={view.id} type={view.name} app={app} />}
+            {showIdRow && <IdRow changeId={changeId} oid={view.id} type={view.name} extras={view.extras} app={app} />}
             {setFields()}
         </div>
     )

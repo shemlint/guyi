@@ -250,6 +250,10 @@ const drawComp = (tree, id, prev = false, slData = {}, dynamic = false) => {
             mapKeys.forEach(k => {
                 props[map[k]] = d[k]
             })
+            if (typeof d === 'object' && !Array.isArray(d) && Object.keys(mapKeys).length < 1) {
+                props = { ...d }
+            }
+            console.log(props)
             ext.index = index
             props.Extras = ext
             props.extras = ext
