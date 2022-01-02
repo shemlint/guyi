@@ -26,7 +26,7 @@ export const Column = React.forwardRef(
             rippleColor: styles.rcolor,
             animationLength: styles.rlength, rippleSize: styles.rsize
         }
-        if (styles.rdisabled === false) {
+        if (styles.rdisabled !== true) {
             rprops.disabled = true
         }
         useRipple(ref, rprops)

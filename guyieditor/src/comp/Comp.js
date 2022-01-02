@@ -133,7 +133,7 @@ const drawComp = (tree, id, prev = false, slData = {}, dynamic = false) => {
     if (node.name === 'Column') {
         let styleProps = { ...props, children: '' }
         comp = <Column key={id} ref={getRef()} data={drawChilds('children')} styles={styleProps}
-            className={props.className} id={props.id} 
+            className={props.className} id={props.id}
             onClick={getEvent('onClick')} />
     }
     if (node.name === 'Row') {
@@ -161,8 +161,8 @@ const drawComp = (tree, id, prev = false, slData = {}, dynamic = false) => {
             backImage = `url(${src})`
         }
         let styleProps = { ...props, children: '', backgroundImage: backImage }
-        comp = <View key={id} ref={getRef()} data={drawChilds('child')} styles={styleProps} center={props.center}
-            onClick={getEvent('onClick')}
+        comp = <View key={id} ref={getRef()} data={drawChilds('child')} styles={styleProps}
+            center={props.center} onClick={getEvent('onClick')}
             className={props.className} id={props.id}
         />
     }
@@ -751,8 +751,8 @@ const drawComp = (tree, id, prev = false, slData = {}, dynamic = false) => {
 const updateApp = (tree) => {
     if (tree[0].funcs && tree[0].funcs.length > 1) {
         let funcs = tree[0].funcs
-        let code = 
-`//code auto imported but with errors
+        let code =
+            `//code auto imported but with errors
 class main {
     constructor({ getState, setState, mergeState, tiePS, getRef, getProps, getEvents, getExtras }) {
         this.gs = getState
@@ -830,7 +830,7 @@ class Comp extends React.Component {
             if (this.classInst[name]) {
                 this.classInst[name]()
             }
-        } catch (e) { console.log(`${this.props.tree[0].name} ${name} error`, e.message,e) }
+        } catch (e) { console.log(`${this.props.tree[0].name} ${name} error`, e.message, e) }
     }
     getParentData() {
         let { tree } = this.props
