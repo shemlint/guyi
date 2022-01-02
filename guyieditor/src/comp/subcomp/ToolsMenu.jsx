@@ -26,7 +26,8 @@ const ToolsMenu = ({ toolsProps }) => {
                 <div>
                     <Tabs size='small' value={index} onChange={(e, i) => set('toolsindex', i, setIndex)}  >
                         <Tab label='Reload' index={0} />
-                        <Tab label='Shortcuts' index={1} />
+                        <Tab label='Prefrences' index={1} />
+                        <Tab label='Shortcuts' index={2} />
                     </Tabs>
                     <TabPanel open={index === 0} >
                         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }} >
@@ -44,6 +45,11 @@ const ToolsMenu = ({ toolsProps }) => {
                         </div>
                     </TabPanel>
                     <TabPanel open={index === 1} >
+                        <div>
+                            comming soon
+                        </div>
+                    </TabPanel >
+                     <TabPanel open={index === 2} >
                         <div>
                             <div>Ctrl +s save(project or function)</div>
                             <div>Ctrl +o open(project )</div>

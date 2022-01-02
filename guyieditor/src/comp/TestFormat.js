@@ -9,7 +9,7 @@ import * as THREE from 'three/build/three.module'
 import htm from 'htm'
 
 import { propT, eventT } from './util/data'
-import { fetchApp, initApp, shortCuts, changeSync,newApp } from './util/store'
+import { fetchApp, initApp, shortCuts, changeSync, newApp } from './util/store'
 
 import Tab from './util/Tab'
 import Comp from './Comp'
@@ -27,15 +27,15 @@ import Preview from './Preview'
 import ExModules from './ExModules'
 import ReModules from './ReModules'
 
-import { css, keyframes,injectGlobal,cx } from '@emotion/css'
+import { css, keyframes, injectGlobal, cx } from '@emotion/css'
 
 global.React = React
 global.THREE = THREE
 global.html = htm.bind(React.createElement)
 global.css = css
 global.keyframes = keyframes
-global.cx=cx
-global.injectGlobal=injectGlobal
+global.cx = cx
+global.injectGlobal = injectGlobal
 
 global.created = 0
 global.modules = []
@@ -121,17 +121,17 @@ let propTypes = [...propT]
 let eventTypes = [...eventT]
 
 const CompSmall = (props) => {
-    const [key,setKey]=useState(124)
+    const [key, setKey] = useState(124)
     const reload = () => {
         setKey(Math.random())
     }
     useEffect(() => {
         window.addEventListener('codechange', reload)
-        return ()=>window.removeEventListener('codechange',reload)
+        return () => window.removeEventListener('codechange', reload)
     })
-    
+
     return (
-       <Comp key={key} {...props} />
+        <Comp key={key} {...props} />
     )
 }
 
@@ -243,6 +243,27 @@ const TestFormat = () => {
         set('layout', { new: newLay, old: layout })
         setLayout(newLay)
     }
+    const moduleChange = (dir) => {
+        let names = global.modules.map(m => m[0].name)
+        const pos = names.indexOf(app[0].name)
+        console.log(pos, app[0].name)
+        let newPos=0
+        if(pos===-1)return
+        if (dir === 'up') {
+            if (pos === 0) {
+                newPos=global.modules.length - 1
+            } else{
+                newPos=pos-1
+            }
+        } else {
+            if (pos === global.modules.length-1) {
+                newPos=0
+            } else{
+                newPos=pos+1
+            }
+        }
+        changeApp(newPos)
+    }
     const shortCutsWrap = (e) => shortCuts(
         e,
         setTabPos,
@@ -250,17 +271,18 @@ const TestFormat = () => {
         () => onSave(get('lastsave'), true),
         saveLayout,
         disMes,
+        moduleChange,
     )
-    useEffect(() => {
+    useEffect(()=>{
         console.log('Guyi editor started.\nThanks for using GUYI.\nShare with others about our platform.')
-
+     },[])
+    useEffect(() => {
         window.addEventListener('keydown', shortCutsWrap)
         return () => {
             window.removeEventListener('keydown', shortCutsWrap)
         }
         //eslint-disable-next-line
-    }, [])
-
+    })
     //compileFunctions(appState, setAppState, app[0].locals, app[0].funcs)
     const setPropsEvents = (mod) => {
         if (mod[0].localPT === undefined) {

@@ -76,16 +76,16 @@ global.schema = {
     doc: { def: '' },
     consoleheight: { def: 30 },
     consoleopen: { def: true },
-    lasttest:{def:''},
-    mipmapopen:{def:true},
-    restype:{def:'media'},
-    lastcolors:{def:['blue','red','green','purple','violet']}
+    lasttest: { def: '' },
+    mipmapopen: { def: true },
+    restype: { def: 'media' },
+    lastcolors: { def: ['blue', 'red', 'green', 'purple', 'violet'] }
 }
 const get = global.store.get
 const set = global.store.set
 
 
-const newApp=[
+const newApp = [
     {
         name: 'Main', state: {}, locals: {}, propTypes: [], funcs: [{
             name: 'globals', props: {},
@@ -93,7 +93,7 @@ const newApp=[
 
         }],
         classCode:
-`//write code for module here
+            `//write code for module here
 class main {
     constructor({ getState, setState, mergeState, tiePS, getRef, getProps, getEvents, getExtras }) {
         this.gs = getState
@@ -166,7 +166,7 @@ const changeSync = (sync) => {
         }
 
     } catch (e) {
-        console.log( e.message)
+        console.log(e.message)
     }
 }
 
@@ -220,7 +220,7 @@ const initApp = (adress, disMes, setConnected, open) => {
 
 }
 
-const shortCuts = (e, setTabPos, open, save, saveLayout, disMes) => {
+const shortCuts = (e, setTabPos, open, save, saveLayout, disMes,moduleChange) => {
     if (e.ctrlKey) {
         switch (e.key) {
             case '1':
@@ -259,6 +259,12 @@ const shortCuts = (e, setTabPos, open, save, saveLayout, disMes) => {
                 e.preventDefault()
                 open();
                 break;
+            case 'ArrowUp':
+                moduleChange('up')
+                break;
+            case 'ArrowDown':
+                moduleChange('down')
+                break
             default:
             // console.log('just ctrl')
 
@@ -285,7 +291,7 @@ const shortCuts = (e, setTabPos, open, save, saveLayout, disMes) => {
     }
 }
 
-const importOldProjos = async() => {
+const importOldProjos = async () => {
     for (const p of Object.keys(localStorage)) {//import old apps
         try {
             let pr = JSON.parse(localStorage[p])
@@ -304,7 +310,7 @@ const importOldProjos = async() => {
 }
 importOldProjos()
 
-const done='DONE'
-export { fetchApp, uploadApp, initApp, changeSync, shortCuts,done ,newApp }
+const done = 'DONE'
+export { fetchApp, uploadApp, initApp, changeSync, shortCuts, done, newApp }
 
 
