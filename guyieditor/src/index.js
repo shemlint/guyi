@@ -3,9 +3,10 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import TestFormat from './comp/TestFormat';
 import reportWebVitals from './reportWebVitals';
+import { ErrorBoundary } from './comp/subcomp/BaseComps'
 
 const dropped = async (e) => {
-  
+
   try {
     const readDataUrl = (file) => {
       return new Promise((res, rej) => {
@@ -29,7 +30,7 @@ const dropped = async (e) => {
 
     }
     e.preventDefault()
-    
+
 
   } catch (e) {
     console.log('Reading dropped files failed ')
@@ -48,9 +49,18 @@ const dragOver = (e) => {
 
 ReactDOM.render(
   <React.StrictMode>
-    <div onDrop={(e)=>{e.preventDefault();dropped(e)}} onDragOver={dragOver} >
-      <TestFormat />
-    </div>
+    <ErrorBoundary error={(inst) => (
+      <div>
+        <div style={{ display: 'flex',flexDirection:'column', justifyCotent: 'center', alignItems: 'center' }}>
+          <h1>Guyi Crushed !!!</h1>
+          <button onClick={() => inst.setState({ hasError: false })} >Click to try reopening</button>
+        </div>
+      </div>
+    )} >
+      <div onDrop={(e) => { e.preventDefault(); dropped(e) }} onDragOver={dragOver} >
+        <TestFormat />
+      </div>
+    </ErrorBoundary>
   </React.StrictMode>,
   document.getElementById('root')
 );

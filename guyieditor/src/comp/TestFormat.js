@@ -121,21 +121,17 @@ let propTypes = [...propT]
 let eventTypes = [...eventT]
 
 const CompSmall = (props) => {
-    const [off, setOff] = useState(false)
+    const [key,setKey]=useState(124)
     const reload = () => {
-        setOff(true)
-        setTimeout(() => setOff(false), 20)
+        setKey(Math.random())
     }
     useEffect(() => {
         window.addEventListener('codechange', reload)
         return ()=>window.removeEventListener('codechange',reload)
     })
-    //return(<div>hiden</div>)
-    if (off) {
-        return <div></div>
-    }
+    
     return (
-       <Comp {...props} />
+       <Comp key={key} {...props} />
     )
 }
 

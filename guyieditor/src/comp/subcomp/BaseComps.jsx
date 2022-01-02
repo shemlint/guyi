@@ -1,4 +1,5 @@
 import React from 'react'
+import { useRipple } from 'react-use-ripple'
 
 export const Button = React.forwardRef(
     ({
@@ -19,9 +20,16 @@ export const Button = React.forwardRef(
 
 
 export const Column = React.forwardRef(
-    ({ styles = {}, className, data = [], id,onClick
+    ({ styles = {}, className, data = [], id, onClick
     }, ref) => {
-
+        let rprops = {
+            rippleColor: styles.rcolor,
+            animationLength: styles.rlength, rippleSize: styles.rsize
+        }
+        if (styles.rdisabled === false) {
+            rprops.disabled = true
+        }
+        useRipple(ref, rprops)
         return (
             <div onClick={onClick}
                 ref={ref}
@@ -65,8 +73,16 @@ export const Image = React.forwardRef(({
 
 export const Row = React.forwardRef(
     ({
-        styles = {}, data = [], className, id,onClick
+        styles = {}, data = [], className, id, onClick
     }, ref) => {
+        let rprops = {
+            rippleColor: styles.rcolor,
+            animationLength: styles.rlength, rippleSize: styles.rsize
+        }
+        if (styles.rdisabled === false) {
+            rprops.disabled = true
+        }
+        useRipple(ref, rprops)
         return (
             <div onClick={onClick}
                 ref={ref}
@@ -117,7 +133,7 @@ export const View = React.forwardRef(({
     id = '',
     className = '',
     data = [],
-    styles = {},
+    styles:sty = {},
     center = false,
     onClick = () => { },
 }, ref) => {
@@ -129,32 +145,43 @@ export const View = React.forwardRef(({
         centerProps.alignItems = 'center';
 
     }
-    if (styles.borderRadius && styles.borderRadius !== 0) {
-        styles.borderTopleftRadius = undefined;
-        styles.borderTopRightRadius = undefined;
-        styles.borderBottomleftRadius = undefined;
-        styles.borderBottomRightRadius = undefined;
+    if (sty.borderRadius && sty.borderRadius !== 0) {
+        sty.borderTopleftRadius = sty.borderRadius;
+        sty.borderTopRightRadius = sty.borderRadius;
+        sty.borderBottomleftRadius = sty.borderRadius;
+        sty.borderBottomRightRadius = sty.borderRadius;
+        delete sty.borderRadius
     }
-    if (styles.margin && styles.margin !== 0) {
-        styles.marginLeft = undefined;
-        styles.marginRight = undefined;
-        styles.marginTop = undefined;
-        styles.marginBottom = undefined;
-    }
-
-    if (styles.padding && styles.padding !== 0) {
-        styles.paddingLeft = undefined;
-        styles.paddingRight = undefined;
-        styles.paddingTop = undefined;
-        styles.paddingBottom = undefined;
-    }
-    if (styles.border && styles.border.trim() !== '') {
-        styles.borderTop = undefined;
-        styles.borderBottom = undefined;
-        styles.borderLeft = undefined;
-        styles.borderRight = undefined;
+    if (sty.margin && sty.margin !== 0) {
+        sty.marginLeft = sty.margin;
+        sty.marginRight = sty.margin;
+        sty.marginTop = sty.margin;
+        sty.marginBottom = sty.margin;
+        delete sty.margin
     }
 
+    if (sty.padding && sty.padding !== 0) {
+        sty.paddingLeft = sty.padding;
+        sty.paddingRight = sty.padding;
+        sty.paddingTop = sty.padding;
+        sty.paddingBottom = sty.padding;
+        delete sty.padding
+    }
+    if (sty.border && sty.border.trim() !== '') {
+        sty.borderTop = sty.border;
+        sty.borderBottom = sty.border;
+        sty.borderLeft = sty.border;
+        sty.borderRight = sty.border;
+        delete sty.border
+    }
+    let rprops = {
+        rippleColor: sty.rcolor,
+        animationLength: sty.rlength, rippleSize: sty.rsize
+    }
+    if (sty.rdisabled === false) {
+        rprops.disabled = true
+    }
+    useRipple(ref, rprops)
     return (
         <div
             ref={ref}
@@ -162,7 +189,7 @@ export const View = React.forwardRef(({
             className={className}
             onClick={onClick}
             style={{
-                ...styles,
+                ...sty,
                 display: 'flex',
                 flexDirection: 'column',
                 ...centerProps,
@@ -188,9 +215,17 @@ export class ErrorBoundary extends React.Component {
     }
     render() {
         if (this.state.hasError) {
-            return <div>ReactRaw Error</div>
+            if (this.props.error) {
+                return this.props.error(this)
+            } else {
+                return <div>React raw Error</div>
+            }
         } else {
-            return this.props.comp
+            if (this.props.comp) {
+                return this.props.comp
+            } else {
+                return this.props.children
+            }
         }
     }
 }

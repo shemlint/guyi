@@ -22,6 +22,10 @@ const propT = [
             { name: 'Positon', prop: 'position', type: 'select,static,absolute,fixed,relative,sticky,initial,inherit', value: '' },
             { name: 'Class', prop: 'className', type: 'text', value: '' },
             { name: 'DomId', prop: 'id', type: 'text', value: '' },
+            { name: 'Ripples', prop: 'rdisabled', type: 'bool', value: false },
+            { name: 'RippleColor', prop: 'rcolor', type: 'color', value: '' },
+            { name: 'RippleSize', prop: 'rsize', type: 'number', value: 100 },
+            { name: 'RippleLength', prop: 'rlength', type: 'number', value: 700 },
             { name: 'Children', prop: 'children', type: 'comps', value: [] },
         ]
     },
@@ -46,6 +50,10 @@ const propT = [
             { name: 'Cursor', prop: 'cursor', type: 'select,copy,crosshair,grab,help,move,no-drop,none,not-allowed,pointer,progress,revert,row-resize,text,unset,wait,zoom-in,zoom-out', value: 'select' },
             { name: 'Class', prop: 'className', type: 'text', value: '' },
             { name: 'DomId', prop: 'id', type: 'text', value: '' },
+            { name: 'Ripples', prop: 'rdisabled', type: 'bool', value: false },
+            { name: 'RippleColor', prop: 'rcolor', type: 'color', value: '' },
+            { name: 'RippleSize', prop: 'rsize', type: 'number', value: 100 },
+            { name: 'RippleLength', prop: 'rlength', type: 'number', value: 700 },
             { name: 'Children', prop: 'children', type: 'comps', value: [] },
         ]
     },
@@ -95,7 +103,11 @@ const propT = [
             { name: 'BackgroundSize', prop: 'backgroundSize', type: 'select,cover,auto,contain', value: 'cover' },
             { name: 'Class', prop: 'className', type: 'text', value: '' },
             { name: 'DomId', prop: 'id', type: 'text', value: '' },
-            { name: 'Child', prop: 'child', type: 'comp', value: [] },
+            { name: 'Ripples', prop: 'rdisabled', type: 'bool', value: false },
+            { name: 'RippleColor', prop: 'rcolor', type: 'color', value: '' },
+            { name: 'RippleSize', prop: 'rsize', type: 'number', value: 100 },
+            { name: 'RippleLength', prop: 'rlength', type: 'number', value: 700 },
+            { name: 'Children', prop: 'children', type: 'comps', value: [] },
         ]
     },
     {
@@ -482,8 +494,8 @@ const propT = [
 //#region
 const eventT = [
     { name: 'Button', events: [{ name: 'onClick', args: 'e' }, { name: 'onDbCLick', args: 'e' }] },
-    {name:'Column',events:[{name:'onClick',args:'e'}]},
-    {name:'Row',events:[{name:'onClick',args:'e'}]},
+    { name: 'Column', events: [{ name: 'onClick', args: 'e' }] },
+    { name: 'Row', events: [{ name: 'onClick', args: 'e' }] },
     { name: 'View', events: [{ name: 'onClick', args: 'e' }, { name: 'onDbCLick', args: 'e' }] },
     { name: 'TextInput', events: [{ name: 'onChange', args: 'e', }, { name: 'onClick', args: 'e', }] },
     { name: 'Icon', events: [{ name: 'onClick', args: 'e' }] },

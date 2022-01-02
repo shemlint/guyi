@@ -29,6 +29,7 @@
     "react-split-pane": "^0.1.92",
     "react-splitter-layout": "^4.0.0",
     "react-switch": "^6.0.0",
+    "react-use-ripple": "^1.5.2",
     "three": "^0.133.1",
     "web-vitals": "^1.1.2"
   },
