@@ -71,13 +71,13 @@ const drawComp = (tree, id, prev = false, slData = {}, dynamic = false) => {
         //try {
         const m = events[type] ? events[type].method : ''
         const args = (events[type] && events[type].args) ? events[type].args : ''
-        const userArgs = args===''?[]:args.split(',')
+        const userArgs = args === '' ? [] : args.split(',')
         let p = slData.class[m]
         if (typeof p === 'function') {
             //let userArgs=events
             return (...args) => {
                 try { return slData.class[m](...userArgs, ...args) }
-                catch (e) { console.warn(`Method ${type}[${m}] error ${e.message}`, e ) }
+                catch (e) { console.warn(`Method ${type}[${m}] error ${e.message}`, e) }
             }
         } else {
             return undefined
@@ -869,14 +869,14 @@ class Comp extends React.Component {
         const events = {}
         let pd = Object.values(this.parentData).map(d => [d.name, d.instance])
         Object.entries(this.props.tree[0].events).forEach(([method, inst]) => {
-           if (inst.module) {
-                let mod = inst.module,name=inst.method,args=inst.args||''
-                const userArgs = args===''?[]:args.split(',')
+            if (inst.module) {
+                let mod = inst.module, name = inst.method, args = inst.args || ''
+                const userArgs = args === '' ? [] : args.split(',')
                 pd.forEach(([passedmod, m]) => {
-                     if (passedmod === mod) {
+                    if (passedmod === mod) {
                         events[method] = (...args) => {
                             try {
-                                return m[name](...userArgs,...args)
+                                return m[name](...userArgs, ...args)
                             } catch (e) { console.log(`Error ${this.props.tree[0].name}[${name}] ${e.message}`) }
                         }
                     }

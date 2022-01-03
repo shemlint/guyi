@@ -18,7 +18,7 @@ import EnterInput from './util/EnterInput'
 import { Preview } from './Resources'
 const get = global.store.get
 const set = global.store.set
-let condCount=0
+
 const MSelectWrap = ({ options = [], value = '', onChange }) => {
     return (
         <Select value={value} onChange={(e) => onChange(e.target.value)}>
@@ -276,8 +276,7 @@ export const Comps = ({ name = '', values = [], app, setApp, passChild = false, 
             onChange(tmpChilds)
             return;
         }
-        global.created++;
-        let id = 'comp' + global.created;
+        let id = 'comp' + (++global.created);
         let child = { name: data, id, props: {} };
         if (data.startsWith('Md') || data.startsWith('Fa') || data.startsWith('Bi')) {
             child.name = 'Icon'
@@ -354,8 +353,7 @@ export const Comp = ({ name = '', values = [], app, setApp, passChild = false, o
             return;
         }
         let tmpChilds = [...values];
-        global.created++;
-        let id = 'comp' + global.created;
+        let id = 'comp' + (++global.created);
         let child = { name: data, id, props: {} };
         if (data.startsWith('Md') || data.startsWith('Fa') || data.startsWith('Bi')) {
             child.name = 'Icon'
@@ -491,7 +489,7 @@ export const Conditional = ({ name = '', value = { data: [] }, props, onChange }
         let type = e.dataTransfer.getData('text')
         e.preventDefault()
 
-        let id = 'cond' + condCount++
+        let id = 'cond' + (++global.created)
         let child = { name: type, id, props: {} }
         if (type.startsWith('Md') || type.startsWith('Fa') || type.startsWith('Bi')) {
             child.name = 'Icon'
