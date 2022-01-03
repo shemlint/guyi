@@ -25,11 +25,27 @@ const EventRow = ({ event = {}, view = {}, setApp, app }) => {
         if (choice === 'none') {
             tmpView.events[event.name] = null
         } else {
+            // if(typeof tmpView.events[event.name]!=='object'){
+            //     tmpView.events[event.name]
+            // }
             if (basicComps.includes(view.name)) {
                 tmpView.events[event.name] = choice
             } else {
                 tmpView.events[`${app[0].name},${event.name}`] = choice
             }
+        }
+        let ids = tmpApp.map(c => c.id)
+        let pos = ids.indexOf(view.id)
+        if (pos !== -1) {
+            tmpApp[pos] = tmpView
+        }
+        setApp(tmpApp)
+    }
+    const changeArgs=(e)=>{
+        let tmpApp = [...app]
+        let tmpView = { ...view }
+        if(tmpView.events[event.name]){
+            tmpView.events[event.name].args=e.target.value
         }
         let ids = tmpApp.map(c => c.id)
         let pos = ids.indexOf(view.id)
@@ -44,6 +60,7 @@ const EventRow = ({ event = {}, view = {}, setApp, app }) => {
             <Select value={current} placeholder="Function " onChange={(e) => onChange(e.target.value)}>
                 {options.map(m => <MenuItem value={m}>{m}</MenuItem>)}
             </Select>
+            <input type='text' value={event.args===undefined?'':event.args} onChange={changeArgs}  />
         </div>
     )
 }

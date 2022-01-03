@@ -18,7 +18,7 @@ import EnterInput from './util/EnterInput'
 import { Preview } from './Resources'
 const get = global.store.get
 const set = global.store.set
-
+let condCount=0
 const MSelectWrap = ({ options = [], value = '', onChange }) => {
     return (
         <Select value={value} onChange={(e) => onChange(e.target.value)}>
@@ -449,7 +449,7 @@ export const Conditional = ({ name = '', value = { data: [] }, props, onChange }
     let data = value
     props.children = data.map(d => d[1])
 
-    let Row = ({ row, index }) => {
+    const Row = ({ row, index }) => {
         const [cond, setCond] = useState(row[0])
 
         const condChange = (e) => {
@@ -491,7 +491,7 @@ export const Conditional = ({ name = '', value = { data: [] }, props, onChange }
         let type = e.dataTransfer.getData('text')
         e.preventDefault()
 
-        let id = 'cond' + global.created++
+        let id = 'cond' + condCount++
         let child = { name: type, id, props: {} }
         if (type.startsWith('Md') || type.startsWith('Fa') || type.startsWith('Bi')) {
             child.name = 'Icon'

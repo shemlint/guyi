@@ -246,7 +246,6 @@ const TestFormat = () => {
     const moduleChange = (dir) => {
         let names = global.modules.map(m => m[0].name)
         const pos = names.indexOf(app[0].name)
-        console.log(pos, app[0].name)
         let newPos=0
         if(pos===-1)return
         if (dir === 'up') {

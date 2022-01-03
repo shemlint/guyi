@@ -11,7 +11,7 @@ import {
     MdImage, MdCheckBoxOutlineBlank,
 } from 'react-icons/md'
 import { FaInfo, FaMap, FaCode,FaReact } from 'react-icons/fa'
-import { GiSuspicious, GiLaddersPlatform, GiRunningNinja, GiEchoRipples } from 'react-icons/gi'
+import { GiSuspicious, GiLaddersPlatform, GiRunningNinja} from 'react-icons/gi'
 import { GrRadial, GrToast } from 'react-icons/gr'
 import { GoDiffModified } from 'react-icons/go'
 import { BsNewspaper, BsCardHeading } from 'react-icons/bs'
@@ -29,7 +29,6 @@ export const dataBasic = [
     { name: 'TextInput', icon: <BiEditAlt size={size} color={color} /> },
     { name: 'View', icon: <MdCheckBoxOutlineBlank size={size} color={color} /> },
     { name: 'Image', icon: <MdImage size={size} color={color} /> },
-    { name: 'Ripples', icon: <GiEchoRipples size={size} color={color} /> },
     { name: 'Html', icon: <FaCode size={size} color={color} /> },
     {name:'Video',icon:<MdMovie  size={size} color={color}  /> },
     {name:'Audio',icon:<MdMusicVideo  size={size} color={color}  /> },

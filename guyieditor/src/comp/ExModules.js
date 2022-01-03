@@ -4,7 +4,6 @@ import Menu from '@material-ui/core/Menu'
 import { AiFillStar } from 'react-icons/ai'
 import { BiSearch } from 'react-icons/bi'
 import { FaDownload } from 'react-icons/fa'
-import Ripples from 'react-ripples'
 import { Resizable } from 're-resizable'
 import Scrollbars from 'react-custom-scrollbars'
 import Upload from './subcomp/ExModUpload'
@@ -352,17 +351,13 @@ const ExModules = ({ app, setApp }) => {
                     <div>{files}</div>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }} >
-                    <Ripples style={{ display: 'flex', alignItems: 'center', margin: 20 }} onClick={like} >
+                    <div style={{ display: 'flex', alignItems: 'center', margin: 20 }} onClick={like} >
                         <div style={{ marginRight: 5 }}>589</div>
                         <AiFillStar size={20} color='blue' />
-                    </Ripples>
-                    <Ripples style={{ display: 'flex', alignItems: 'center', margin: 20 }} onClick={() => download(false)} >
-                        <div >Comp<FaDownload size={20} color='purple' /></div>
-                    </Ripples>
-                    <Ripples style={{ display: 'flex', alignItems: 'center' }} onClick={() => download(true)} >
-                        <div>Mod<FaDownload size={20} color='blue' /></div>
-                    </Ripples>
-                </div>
+                    </div>
+                        <div style={{ display: 'flex', alignItems: 'center', margin: 20 }} onClick={() => download(false)} >Comp<FaDownload size={20} color='purple' /></div>
+                       <div style={{ display: 'flex', alignItems: 'center' }} onClick={() => download(true)} >Mod<FaDownload size={20} color='blue' /></div>
+                    </div>
                 <div style={{ display: 'flex', justifyContent: 'center', minHeight: 16 }}>{info}</div>
             </div>
         )

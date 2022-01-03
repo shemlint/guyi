@@ -3,7 +3,6 @@ import { Row, Column, View, Text, Button, Image, ErrorBoundary } from './subcomp
 import * as md from 'react-icons/md'
 import * as fa from 'react-icons/fa'
 import * as bi from 'react-icons/bi'
-import Ripples from 'react-ripples'
 
 import MButton from '@material-ui/core/Button'
 import MTextField from '@material-ui/core/TextField'
@@ -73,6 +72,7 @@ const drawComp = (tree, id, prev = false, slData = {}, dynamic = false) => {
             let m = events[type] || ''
             let p = slData.class[m]
             if (typeof p === 'function') {
+                //let userArgs=events
                 return (...args) => {
                     try { return slData.class[m](...args) }
                     catch (e) { console.warn(`Method ${type}[${m}] error ${e.message}`, e, slData.class) }
@@ -316,12 +316,12 @@ const drawComp = (tree, id, prev = false, slData = {}, dynamic = false) => {
             onClick={getEvent('onClick')}
         />
     }
-    if (node.name === 'Ripples') {
+    if (node.name === 'Ripples') {//exists only forbackward compatibility
         let child = props.Child && props.Child[0] ? drawComp(tree, props.Child[0], prev, slData) : <div></div>
-        comp = <Ripples style={{ width: '100%', height: '100%' }} color={props.Color}
+        comp = <div style={{ width: '100%', height: '100%' }} color={props.Color}
             during={props.During}
             onClick={getEvent('onClick')}
-        >{child}</Ripples>
+        >{child}</div>
     }
     if (node.name === 'Video') {
         let src = props.src
