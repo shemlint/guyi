@@ -8,7 +8,7 @@ import LocalForage from 'localforage'
 
 import { BsInfoCircle } from 'react-icons/bs'
 import ToolsMenu from './subcomp/ToolsMenu'
-import  {newApp} from './util/store'
+import { newApp } from './util/store'
 
 const set = global.store.set
 const get = global.store.get
@@ -63,13 +63,14 @@ const getKeys = async () => {
     return keys
 }
 
-const Manager = ({ app, setApp, setFull, layout, setLayout, runScripts, info: mesInfo, connect, connected,onOpen,onSave,toolsProps }) => {
+const Manager = ({ app, setApp, setFull, layout, setLayout, runScripts, info: mesInfo, connect, connected, onOpen, onSave, toolsProps }) => {
     const [name, setName] = useState(get('lastsave'))
     const [info, setInfo] = useState('')
     const [open, setOpen] = useState(get('lastopen'))
     const [delmod, setDelmod] = useState('')
     const [withRes, setWithRes] = useState(true)
     const [openLogs, setOpenLogs] = useState(false)
+    const [wildCard,setWildCard]=useState('')
 
     const projoFile = useRef()
 
@@ -82,6 +83,21 @@ const Manager = ({ app, setApp, setFull, layout, setLayout, runScripts, info: me
     const onDelete = async () => {
         if (delmod.trim() === '') disMes('Specify a name')
         let options = getOptions()
+        if (delmod.startsWith('*')) {
+            const sufix = delmod.slice(1)
+            options.forEach(p => {
+                if (p.includes(sufix)) {
+                    onDelete(p)
+                }
+            })
+        }else if(delmod.endsWith('*')){
+            const prefix=delmod.slice(0,delmod.length-1)
+            options.forEach(p=>{
+                if(p.includes(prefix)){
+                    onDelete(prefix)
+                }
+            })
+        }
         if (!options.includes(delmod)) {
             disMes('Project not found ')
             return
@@ -209,7 +225,7 @@ const Manager = ({ app, setApp, setFull, layout, setLayout, runScripts, info: me
     }
     let size = getSize()
 
-    
+
     const [openFile, setOpenFile] = useState(false)
     const closeFile = () => {
         setOpenFile(false)
@@ -219,6 +235,10 @@ const Manager = ({ app, setApp, setFull, layout, setLayout, runScripts, info: me
         set('layoutstate', { new: newLay, old: layout })
         setLayout(newLay)
 
+    }
+    const changeWildCard=(e)=>{
+        setWildCard(e.target.value)
+        e.stopPropagation()
     }
 
     const FileMenu = (
@@ -243,7 +263,7 @@ const Manager = ({ app, setApp, setFull, layout, setLayout, runScripts, info: me
                         onChange={(e) => setName(e.target.value)} label='Name'
                         onKeyPress={(e) => {
                             if (e.key === 'Enter') {
-                                onSave(name,  withRes)
+                                onSave(name, withRes)
                             }
                         }}
                     />
@@ -265,6 +285,7 @@ const Manager = ({ app, setApp, setFull, layout, setLayout, runScripts, info: me
                         value={delmod}
                         onChange={v => setDelmod(v.target.value)}
                     >
+                        <input value={wildCard} onChange={changeWildCard} onClick={e=>e.stopPropagation()} />
                         {options.map(p => <MenuItem key={p} value={p}>{p}</MenuItem>)}
                     </Select>
                 </div>

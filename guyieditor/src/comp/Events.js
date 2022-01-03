@@ -71,9 +71,9 @@ const Events = ({ eventTypes = [], view = {}, funcs = [], setApp, app }) => {
         let events = eventTypes[typeNames.indexOf(view.name)].events
         return (
             <div>
-                {events.map(event => {
+                {events.map((event,i) => {
                     return (
-                        <EventRow eventType={event} funcs={funcs} view={view} setApp={setApp} app={app} />
+                        <EventRow key={`${app[0].name}-${view.id}-${i}`} eventType={event} funcs={funcs} view={view} setApp={setApp} app={app} />
                     )
                 })}
             </div>
