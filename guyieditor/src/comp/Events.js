@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useState} from 'react'
 import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
 import { getCodeClass } from './util/data'
@@ -6,32 +6,30 @@ import { dataHtml, dataBasic } from './Widgets'
 
 const basicComps = dataHtml.map(d => d.name).concat(dataBasic.map(d => d.name))
 
-const EventRow = ({ event = {}, view = {}, setApp, app }) => {
+const EventRow = ({ eventType = {}, view = {}, setApp, app }) => {
     if (!view.events) view.events = {}
     let options = getCodeClass(app[0].classCode || '').methods
     options.unshift('none')
-    const getName = () => {
-        let n = view.events[event.name] || view.events[`${app[0].name},${event.name}`] || 'none'
-        if (n.includes(',')) {
-            n = n.split(',')[1]
-        }
-        return n
+    let events=view.events[eventType.name]
+    if (typeof events !== 'object'||!events) {
+        events = {}
     }
-    let current = getName()
-
+    const [args,setArgs]=useState(events.args||'')
     const onChange = (choice) => {
         let tmpApp = [...app]
         let tmpView = { ...view }
+        if(!tmpView.events[eventType.name]){
+            tmpView.events[eventType.name]={}
+        }
+        let tmpEvents=tmpView.events[eventType.name]
         if (choice === 'none') {
-            tmpView.events[event.name] = null
+            tmpEvents = {}
         } else {
-            // if(typeof tmpView.events[event.name]!=='object'){
-            //     tmpView.events[event.name]
-            // }
+            tmpEvents.method = choice
             if (basicComps.includes(view.name)) {
-                tmpView.events[event.name] = choice
-            } else {
-                tmpView.events[`${app[0].name},${event.name}`] = choice
+                tmpEvents.module = null
+            }else{
+                tmpEvents.module = app[0].name
             }
         }
         let ids = tmpApp.map(c => c.id)
@@ -41,11 +39,11 @@ const EventRow = ({ event = {}, view = {}, setApp, app }) => {
         }
         setApp(tmpApp)
     }
-    const changeArgs=(e)=>{
+    const changeArgs = (e) => {
         let tmpApp = [...app]
         let tmpView = { ...view }
-        if(tmpView.events[event.name]){
-            tmpView.events[event.name].args=e.target.value
+        if (tmpView.events[eventType.name]) {
+            tmpView.events[eventType.name].args = args
         }
         let ids = tmpApp.map(c => c.id)
         let pos = ids.indexOf(view.id)
@@ -56,11 +54,11 @@ const EventRow = ({ event = {}, view = {}, setApp, app }) => {
     }
     return (
         <div style={{ display: 'flex', borderTop: '1px solid grey', justifyContent: 'space-between' }}>
-            <div>{event.name}</div>
-            <Select value={current} placeholder="Function " onChange={(e) => onChange(e.target.value)}>
+            <div>{eventType.name}</div>
+            <Select value={events.method} placeholder="Function " onChange={(e) => onChange(e.target.value)}>
                 {options.map(m => <MenuItem value={m}>{m}</MenuItem>)}
             </Select>
-            <input type='text' value={event.args===undefined?'':event.args} onChange={changeArgs}  />
+            <input type='text' value={args} onChange={e=>setArgs(e.target.value)}  onBlur={changeArgs} />
         </div>
     )
 }
@@ -75,7 +73,7 @@ const Events = ({ eventTypes = [], view = {}, funcs = [], setApp, app }) => {
             <div>
                 {events.map(event => {
                     return (
-                        <EventRow event={event} funcs={funcs} view={view} setApp={setApp} app={app} />
+                        <EventRow eventType={event} funcs={funcs} view={view} setApp={setApp} app={app} />
                     )
                 })}
             </div>

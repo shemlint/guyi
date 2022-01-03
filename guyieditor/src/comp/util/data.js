@@ -620,7 +620,6 @@ const getCodeClass = (code, prev = false, inst = {}) => {
             getProps: () => inst.props.tree[0].props,
             getEvents: () => inst.events,
             getExtras: () => inst.parentData,
-            getp: () => inst.props.tree[0].props,
         })
         if (typeof instance === 'object') {
             let keys = Object.getOwnPropertyNames(instance).concat(Object.getOwnPropertyNames(instance.__proto__))

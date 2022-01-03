@@ -181,6 +181,15 @@ export const View = React.forwardRef(({
     if (sty.rdisabled === false) {
         rprops.disabled = true
     }
+    const getEvents=()=>{
+        let events={}
+        Object.entries(([k,v])=>{
+            if(k.startsWith('on')){
+                events[k]=v
+            }
+        })
+        return events
+    }
     useRipple(ref, rprops)
     return (
         <div
@@ -195,6 +204,7 @@ export const View = React.forwardRef(({
                 ...centerProps,
 
             }}
+            {...getEvents()}
         >
             {data.length > 0 && data[0]}
         </div>

@@ -68,21 +68,23 @@ const drawComp = (tree, id, prev = false, slData = {}, dynamic = false) => {
         return ref
     }
     const getEvent = (type) => {
-        try {
-            let m = events[type] || ''
-            let p = slData.class[m]
-            if (typeof p === 'function') {
-                //let userArgs=events
-                return (...args) => {
-                    try { return slData.class[m](...args) }
-                    catch (e) { console.warn(`Method ${type}[${m}] error ${e.message}`, e, slData.class) }
-                }
-            } else {
-                return undefined
+        //try {
+        const m = events[type] ? events[type].method : ''
+        const args = (events[type] && events[type].args) ? events[type].args : ''
+        const userArgs = args===''?[]:args.split(',')
+        let p = slData.class[m]
+        if (typeof p === 'function') {
+            //let userArgs=events
+            return (...args) => {
+                try { return slData.class[m](...userArgs, ...args) }
+                catch (e) { console.warn(`Method ${type}[${m}] error ${e.message}`, e ) }
             }
-        } catch (e) {
-            console.log(e, slData)
+        } else {
+            return undefined
         }
+        // } catch (e) {
+        //     console.log(e)
+        // }
     }
     const drawChilds = (name) => {
         let childs = node.props[name]
@@ -238,7 +240,7 @@ const drawComp = (tree, id, prev = false, slData = {}, dynamic = false) => {
         let map = getProps('Mapping')
         let extras = getProps('Extras')
         let mapKeys = Object.keys(map)
-        //let unionKeys=mapKeys.filter(k=>dataKeys.includes(k))
+        //let unionKeys=mapKeys.filter(pname=>dataKeys.includes(k))
         let compiled = []
         let allmodules = global.modules.concat(global.remodules)
         let modNames = allmodules.map(m => m[0].name);
@@ -293,7 +295,7 @@ const drawComp = (tree, id, prev = false, slData = {}, dynamic = false) => {
         data.forEach(d => {
             try {
                 //eslint-disable-next-line
-                let anony = new Function('code', `return ${d[0]}`)
+                let anony = new Function('main', `return ${d[0]}`)
                 if (anony(slData.class)) {
                     let pos = tree.map(c => c.id).indexOf(d[1])
                     if (pos !== -1) {
@@ -866,14 +868,15 @@ class Comp extends React.Component {
     setEvents() {
         const events = {}
         let pd = Object.values(this.parentData).map(d => [d.name, d.instance])
-        Object.entries(this.props.tree[0].events).forEach(([k, v]) => {
-            if (k.includes(',')) {
-                let [mod, name] = k.split(',')
-                pd.forEach(([n, m]) => {
-                    if (n === mod) {
-                        events[name] = (...args) => {
+        Object.entries(this.props.tree[0].events).forEach(([method, inst]) => {
+           if (inst.module) {
+                let mod = inst.module,name=inst.method,args=inst.args||''
+                const userArgs = args===''?[]:args.split(',')
+                pd.forEach(([passedmod, m]) => {
+                     if (passedmod === mod) {
+                        events[method] = (...args) => {
                             try {
-                                return m[v](...args)
+                                return m[name](...userArgs,...args)
                             } catch (e) { console.log(`Error ${this.props.tree[0].name}[${name}] ${e.message}`) }
                         }
                     }
