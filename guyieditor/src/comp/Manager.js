@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react'
 import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
 import TextField from '@material-ui/core/TextField'
+import Popover from '@material-ui/core/Popover'
 import Menu from '@material-ui/core/Menu'
 import Snackbar from '@material-ui/core/Snackbar'
 import LocalForage from 'localforage'
@@ -70,7 +71,8 @@ const Manager = ({ app, setApp, setFull, layout, setLayout, runScripts, info: me
     const [delmod, setDelmod] = useState('')
     const [withRes, setWithRes] = useState(true)
     const [openLogs, setOpenLogs] = useState(false)
-    const [wildCard,setWildCard]=useState('')
+    const [wildCard, setWildCard] = useState('')
+    const [openPopover,setOpenPopover]=useState(false)
 
     const projoFile = useRef()
 
@@ -80,32 +82,32 @@ const Manager = ({ app, setApp, setFull, layout, setLayout, runScripts, info: me
     }
 
 
-    const onDelete = async () => {
-        if (delmod.trim() === '') disMes('Specify a name')
+    const onDelete = async (appName = delmod) => {
+        if (appName.trim() === '') disMes('Specify a name')
         let options = getOptions()
-        if (delmod.startsWith('*')) {
-            const sufix = delmod.slice(1)
+        if (appName.startsWith('*')) {
+            const sufix = appName.slice(1)
             options.forEach(p => {
                 if (p.includes(sufix)) {
                     onDelete(p)
                 }
             })
-        }else if(delmod.endsWith('*')){
-            const prefix=delmod.slice(0,delmod.length-1)
-            options.forEach(p=>{
-                if(p.includes(prefix)){
+        } else if (appName.endsWith('*')) {
+            const prefix = appName.slice(0, appName.length - 1)
+            options.forEach(p => {
+                if (p.includes(prefix)) {
                     onDelete(prefix)
                 }
             })
         }
-        if (!options.includes(delmod)) {
+        if (!options.includes(appName)) {
             disMes('Project not found ')
             return
         }
 
-        await LocalForage.removeItem(delmod)
+        await LocalForage.removeItem(appName)
         getKeys()//update project names in localstorage
-        disMes('Delted : ' + delmod)
+        disMes('Delted : ' + appName)
         setDelmod('')
 
     }
@@ -236,11 +238,31 @@ const Manager = ({ app, setApp, setFull, layout, setLayout, runScripts, info: me
         setLayout(newLay)
 
     }
-    const changeWildCard=(e)=>{
-        setWildCard(e.target.value)
-        e.stopPropagation()
-    }
+    const deleteWildCard = () => {
+        let toDelete = []
+        let savedApps = getOptions()
+        if (wildCard.startsWith('*')) {
+            savedApps.forEach(m => {
+                if (m.endsWith(wildCard.split('*')[1])) {
+                    toDelete.push(m)
+                }
+            })
+        } else if (wildCard.endsWith('*')) {
+            savedApps.forEach(m => {
+                if (m.startsWith(wildCard.split('*')[0])) {
+                    toDelete.push(m)
+                }
+            })
+        }
+        let res = window.confirm(`Delete These apps?\n${toDelete.map(m => `\t${m}\n`).join('')}`)
+        if (res) {
+            toDelete.forEach(a => {
+                onDelete(a)
+            })
+        }
 
+    }
+    const anchor = React.useRef()
     const FileMenu = (
         <Menu open={openFile} onClose={closeFile}  >
             <div style={{ maxWidth: 350 }} >
@@ -278,16 +300,25 @@ const Manager = ({ app, setApp, setFull, layout, setLayout, runScripts, info: me
                         {options.map(p => <MenuItem key={p} value={p}>{p}</MenuItem>)}
                     </Select>
                 </div>
-                <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-around' }}>
+                <div ref={anchor} style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-around' }}>
                     <button onClick={onDelete} >Delete(browser)</button>
                     <Select
                         size='small'
                         value={delmod}
                         onChange={v => setDelmod(v.target.value)}
                     >
-                        <input value={wildCard} onChange={changeWildCard} onClick={e=>e.stopPropagation()} />
                         {options.map(p => <MenuItem key={p} value={p}>{p}</MenuItem>)}
                     </Select>
+                    <button onClick={()=>setOpenPopover(true)}>.*</button>
+                    <Popover anchorEl={anchor.current} open={openPopover}
+                        onClose={() => setOpenPopover(false)}
+                        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                    >
+                        <div>
+                            <input value={wildCard} onChange={e => setWildCard(e.target.value)} />
+                            <button onClick={deleteWildCard} >Delete matches</button>
+                        </div>
+                    </Popover>
                 </div>
                 <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-around' }}>
                     <button onClick={loadFromDisk} >Open File</button>
