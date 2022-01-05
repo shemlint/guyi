@@ -19,6 +19,12 @@ const Modules = ({ app = [], changeApp, setApp }) => {
     }
     const add = () => {
         let tname = name.trim();
+        tname.split('/').forEach(t=>{
+            if(t.length<3){
+                disMes('Some parts of name short(<3)')
+                return
+            }
+        })
         if (tname.length < 3) {
             disMes('Name too short');
             return;
@@ -69,7 +75,7 @@ const Modules = ({ app = [], changeApp, setApp }) => {
         setApp([...modules[pos]])
 
     }
-    const Module = ({ mod, index }) => {
+    const Module = ({ mod, index, hanging }) => {
         const [open, setOpen] = useState(false)
         const [name, setName] = useState(mod[0].name)
         const anchor = useRef()
@@ -80,18 +86,18 @@ const Modules = ({ app = [], changeApp, setApp }) => {
                 onDrop={(e) => rearange(e, index)}
                 style={{
                     display: 'flex', justifyContent: 'space-between', borderTop: '2px solid grey', marginBottom: 2,
-                    backgroundColor: mod[0].name === app[0].name ? 'khaki' : '',width:'100%'
+                    backgroundColor: mod[0].name === app[0].name ? 'khaki' : '', width: '100%'
                 }}
                 onClick={() => changeApp(index)}
                 onDragStart={(e) => e.dataTransfer.setData('text', mod[0].name)}
             >
                 <div style={{ position: 'relative' }}>
-                    <div style={{ color: 'purple',fontSize:18 }} >{mod[0].name.split('/').reverse()[0]}</div>
+                    <div style={{ color: 'purple', fontSize: 18 }} >{hanging ? mod[0].name : mod[0].name.split('/').reverse()[0]}</div>
                 </div>
                 <div ref={anchor} >
                     <MdMoreVert size={16} color='purple'
                         onClick={(e) => { setOpen(true); e.stopPropagation() }}
-                        style={{ padding: "0px 2px", border: '1px solid purple',margin:'0px 5px 0px 0px' }}
+                        style={{ padding: "0px 2px", border: '1px solid purple', margin: '0px 5px 0px 0px' }}
                     />
                     <Popover anchorEl={anchor.current} open={open}
                         onClose={() => setOpen(false)}
@@ -110,6 +116,15 @@ const Modules = ({ app = [], changeApp, setApp }) => {
         )
     }
     const rename = (name, index) => {
+        let nameOk=true
+        name.split('/').forEach(t=>{
+           if(t.length<3){
+                disMes('Some parts of name short(<3)')
+                console.log('here')
+                nameOk=false
+            }
+        })
+        if(!nameOk)return
         let basicMods = [...dbasic, ...dhtml]
         if (basicMods.includes(name)) {
             disMes('Name taken by basic Comp')
@@ -189,8 +204,9 @@ const Modules = ({ app = [], changeApp, setApp }) => {
         }
 
     }
+    const ex = global.modules.map((mod, index) => ({ path: mod[0].name, mod, index, comp: <Module key={mod[0].name} mod={mod} index={index} /> }))
+
     const getTree = (data, index) => {
-        let ex = modules.map((mod, index) => ({ path: mod[0].name, comp: <Module key={mod[0].name} mod={mod} index={index} /> }))
         const added = { '': { label: 'root', nodes: [] } }
         ex.forEach(e => {
             const d = e.path
@@ -202,7 +218,7 @@ const Modules = ({ app = [], changeApp, setApp }) => {
                     added[path] = { label: '*', nodes: [] }
                 }
                 if (i === a.length - 1) {
-                    added[path].label = p
+                    added[path].label = d
                     added[path].comp = comp
                 }
             })
@@ -211,12 +227,49 @@ const Modules = ({ app = [], changeApp, setApp }) => {
             parent.nodes.push(added[d])
 
         })
-        return added[''].nodes
+        return added['']
     }
-    const data=getTree()
+    const getOrder = (node) => {
+        const names = [node.label]
+        if (node.nodes && node.nodes[0]) node.nodes.forEach(n => names.push(...getOrder(n, names)))
+        return names
+
+    }
+
+    const data = getTree()
+    const names = getOrder(data)
+    const pinHanging = () => {
+        const mods = []
+        ex.forEach(e => {
+            if (!names.includes(e.path)) {
+                mods.push({ label: e.path, nodes: [], comp: <Module key={e.mod[0].name} mod={e.mod} index={e.index} hanging /> })
+            }
+        })
+        data.nodes.push(...mods)
+    }
+    pinHanging()
+    const reorderMods = () => {
+        const names = getOrder(data)
+        ex.forEach(e => {
+            if (!names.includes(e.path)) {
+                names.push(e.path)
+            }
+        })
+        const newMods = []
+        //        const modNames = global.modules.map(m => m[0].name)
+        global.modules.forEach(m => {
+            let pos = names.indexOf(m[0].name)
+            if (pos !== -1) {
+                newMods[pos] = m
+            }
+        })
+        global.modules = newMods
+        modules = newMods
+    }
+    reorderMods()
     return (
         <div>
-            <TreeView data={data} />
+            <TreeView data={data.nodes} />
             <div style={{ border: '1px solid black', display: 'flex', flexDirection: 'column', alignItems: 'center' }} >
                 <EnterInput type='text' value={name} placeholder='Name' style={{ width: '100%', borderWidth: 0, margin: 2 }}
                     onChange={(e) => { setName(e.target.value) }}

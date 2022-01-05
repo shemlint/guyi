@@ -13,7 +13,7 @@ const TreeView = ({ data = [], tree = [{}], style, onClick = () => { }, drag = f
             global.treeData[tree[0].name + node.label] = open
         }
         return (
-            <div style={{ marginLeft: tabs * 5, width:'100%'}} >
+            <div style={{ marginLeft: tabs * 5,/* width:'100%' */ }} >
                 <div draggable={drag} onDragStart={drag ? (e) => e.dataTransfer.setData('text', node.label + ',no') : undefined}
                     className='outlineRow' key={node.label} style={{ display: 'flex' }}
                     onClick={() => {
@@ -24,7 +24,7 @@ const TreeView = ({ data = [], tree = [{}], style, onClick = () => { }, drag = f
                         onClick={(e) => { e.stopPropagation(); setOpen(!open) }} >
                         <MdExpandMore style={{ visibility: node.nodes && node.nodes[0] ? 'visible' : 'hidden' }} />
                     </div>
-                    <div style={{ width: '100%', backgroundColor: selected === node.label ? 'khaki' : '', display: 'flex' }} >{node.comp ? node.comp : node.label}</div>
+                    <div style={{ width: node.comp?'100%':'100%', backgroundColor: selected === node.label ? 'khaki' : '', display: 'flex' }} >{node.comp ? node.comp : node.label}</div>
                     {action && <div style={{ alignSelf: 'flex-end', display: 'flex' }}
                         onClick={(e) => {
                             e.stopPropagation()

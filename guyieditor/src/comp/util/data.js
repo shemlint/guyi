@@ -19,8 +19,7 @@ const propT = [
             { name: 'Flex', prop: 'flex', type: 'number', value: 0 },
             { name: 'Overflow', prop: 'overflow', type: 'select,visible,hidden,auto,scroll' },
             { name: 'Cursor', prop: 'cursor', type: 'select,copy,crosshair,grab,help,move,no-drop,none,not-allowed,pointer,progress,revert,row-resize,text,unset,wait,zoom-in,zoom-out', value: 'select' },
-            { name: 'Positon', prop: 'position', type: 'select,static,absolute,fixed,relative,sticky,initial,inherit', value: '' },
-            { name: 'Class', prop: 'className', type: 'text', value: '' },
+           { name: 'Class', prop: 'className', type: 'text', value: '' },
             { name: 'DomId', prop: 'id', type: 'text', value: '' },
             { name: 'Positon', prop: 'position', type: 'select,static,absolute,fixed,relative,sticky,initial,inherit', value: '' },
             { name: 'Ripples', prop: 'rdisabled', type: 'bool', value: false },
@@ -109,7 +108,7 @@ const propT = [
             { name: 'RippleColor', prop: 'rcolor', type: 'color', value: '' },
             { name: 'RippleSize', prop: 'rsize', type: 'number', value: 100 },
             { name: 'RippleLength', prop: 'rlength', type: 'number', value: 700 },
-            { name: 'Child', prop: 'children', type: 'comps', value: [] },
+            { name: 'Child', prop: 'child', type: 'comps', value: [] },
         ]
     },
     {
