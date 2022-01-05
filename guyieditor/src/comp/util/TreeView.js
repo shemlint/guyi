@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { MdExpandMore, MdDeleteForever } from 'react-icons/md'
 
-const TreeView = ({ data = [], tree, style, onClick = () => { }, drag = false, onAction = () => { },
+const TreeView = ({ data = [], tree = [{}], style, onClick = () => { }, drag = false, onAction = () => { },
     selected = '', action = false, actionIcon = false }) => {
 
     const Row = ({ node, tabs, path }) => {
@@ -13,7 +13,7 @@ const TreeView = ({ data = [], tree, style, onClick = () => { }, drag = false, o
             global.treeData[tree[0].name + node.label] = open
         }
         return (
-            <div style={{ marginLeft: tabs * 5, }}>
+            <div style={{ marginLeft: tabs * 5, width:'100%'}} >
                 <div draggable={drag} onDragStart={drag ? (e) => e.dataTransfer.setData('text', node.label + ',no') : undefined}
                     className='outlineRow' key={node.label} style={{ display: 'flex' }}
                     onClick={() => {
@@ -24,14 +24,14 @@ const TreeView = ({ data = [], tree, style, onClick = () => { }, drag = false, o
                         onClick={(e) => { e.stopPropagation(); setOpen(!open) }} >
                         <MdExpandMore style={{ visibility: node.nodes && node.nodes[0] ? 'visible' : 'hidden' }} />
                     </div>
-                    <div style={{ width: '100%', backgroundColor: selected === node.label ? 'khaki' : '',display:'flex' }} >{node.label}</div>
-                    {action && <div style={{ alignSelf: 'flex-end',display:'flex' }}
+                    <div style={{ width: '100%', backgroundColor: selected === node.label ? 'khaki' : '', display: 'flex' }} >{node.comp ? node.comp : node.label}</div>
+                    {action && <div style={{ alignSelf: 'flex-end', display: 'flex' }}
                         onClick={(e) => {
                             e.stopPropagation()
                             onAction(node, path)
                         }} >
                         {node.icon}
-                        { actionIcon}
+                        {actionIcon}
                         {!actionIcon && !node.icon && <MdDeleteForever size={20} color='blue' />}
                     </div>}
                 </div>
@@ -46,7 +46,7 @@ const TreeView = ({ data = [], tree, style, onClick = () => { }, drag = false, o
     const getRows = (nodes, tabs = 0, path = '') => {
         let rows = [];
         nodes.forEach(val => {
-            let newPath=path + '/' + val.label
+            let newPath = path + '/' + val.label
             rows.push(<Row key={newPath} node={val} tabs={tabs} path={newPath} />)
         })
         return rows

@@ -103,8 +103,8 @@ const setStartId = () => {
     let start = 0
     global.modules.forEach(m => {
         m.forEach(c => {
-            if (c.id && c.id.startsWith('comp')) {
-                let id = c.id.split('comp')[1]
+            if (c.id && (c.id.startsWith('comp') || c.id.startsWith('cond'))) {
+                let id = c.id.split('comp')[1] || c.id.split('cond')[1]
                 id = parseInt(id)
                 if (!isNaN(id)) {
                     if (id > start) {
@@ -246,19 +246,19 @@ const TestFormat = () => {
     const moduleChange = (dir) => {
         let names = global.modules.map(m => m[0].name)
         const pos = names.indexOf(app[0].name)
-        let newPos=0
-        if(pos===-1)return
+        let newPos = 0
+        if (pos === -1) return
         if (dir === 'up') {
             if (pos === 0) {
-                newPos=global.modules.length - 1
-            } else{
-                newPos=pos-1
+                newPos = global.modules.length - 1
+            } else {
+                newPos = pos - 1
             }
         } else {
-            if (pos === global.modules.length-1) {
-                newPos=0
-            } else{
-                newPos=pos+1
+            if (pos === global.modules.length - 1) {
+                newPos = 0
+            } else {
+                newPos = pos + 1
             }
         }
         changeApp(newPos)
@@ -272,9 +272,9 @@ const TestFormat = () => {
         disMes,
         moduleChange,
     )
-    useEffect(()=>{
+    useEffect(() => {
         console.log('Guyi editor started.\nThanks for using GUYI.\nShare with others about our platform.')
-     },[])
+    }, [])
     useEffect(() => {
         window.addEventListener('keydown', shortCutsWrap)
         return () => {

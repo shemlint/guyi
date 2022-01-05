@@ -109,7 +109,7 @@ const propT = [
             { name: 'RippleColor', prop: 'rcolor', type: 'color', value: '' },
             { name: 'RippleSize', prop: 'rsize', type: 'number', value: 100 },
             { name: 'RippleLength', prop: 'rlength', type: 'number', value: 700 },
-            { name: 'Children', prop: 'children', type: 'comps', value: [] },
+            { name: 'Child', prop: 'children', type: 'comps', value: [] },
         ]
     },
     {

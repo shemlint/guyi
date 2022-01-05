@@ -5,6 +5,7 @@ import Popover from '@material-ui/core/Popover'
 import EnterInput from './util/EnterInput'
 import { dataBasic, dataHtml } from './Widgets'
 import { newApp } from './util/store'
+import TreeView from './util/TreeView'
 
 const dbasic = dataBasic.map(b => b.name)
 const dhtml = dataHtml.map(b => b.name)
@@ -79,18 +80,18 @@ const Modules = ({ app = [], changeApp, setApp }) => {
                 onDrop={(e) => rearange(e, index)}
                 style={{
                     display: 'flex', justifyContent: 'space-between', borderTop: '2px solid grey', marginBottom: 2,
-                    backgroundColor: mod[0].name === app[0].name ? 'khaki' : '',
+                    backgroundColor: mod[0].name === app[0].name ? 'khaki' : '',width:'100%'
                 }}
                 onClick={() => changeApp(index)}
                 onDragStart={(e) => e.dataTransfer.setData('text', mod[0].name)}
             >
                 <div style={{ position: 'relative' }}>
-                    <div style={{ color: 'purple', fontSize: 20 }} >{mod[0].name}</div>
+                    <div style={{ color: 'purple',fontSize:18 }} >{mod[0].name.split('/').reverse()[0]}</div>
                 </div>
                 <div ref={anchor} >
-                    <MdMoreVert size={20} color='purple'
+                    <MdMoreVert size={16} color='purple'
                         onClick={(e) => { setOpen(true); e.stopPropagation() }}
-                        style={{ padding: "0px 2px", border: '1px solid purple' }}
+                        style={{ padding: "0px 2px", border: '1px solid purple',margin:'0px 5px 0px 0px' }}
                     />
                     <Popover anchorEl={anchor.current} open={open}
                         onClose={() => setOpen(false)}
@@ -188,13 +189,34 @@ const Modules = ({ app = [], changeApp, setApp }) => {
         }
 
     }
+    const getTree = (data, index) => {
+        let ex = modules.map((mod, index) => ({ path: mod[0].name, comp: <Module key={mod[0].name} mod={mod} index={index} /> }))
+        const added = { '': { label: 'root', nodes: [] } }
+        ex.forEach(e => {
+            const d = e.path
+            const comp = e.comp
+            let parts = d.split('/')
+            parts.forEach((p, i, a) => {
+                const path = parts.slice(0, i + 1).join('/')
+                if (!added[path]) {
+                    added[path] = { label: '*', nodes: [] }
+                }
+                if (i === a.length - 1) {
+                    added[path].label = p
+                    added[path].comp = comp
+                }
+            })
+            const ppath = parts.slice(0, -1).join('/')
+            let parent = added[ppath]
+            parent.nodes.push(added[d])
+
+        })
+        return added[''].nodes
+    }
+    const data=getTree()
     return (
         <div>
-            {modules.map((mod, index) => {
-                return (
-                    <Module key={mod[0].name} mod={mod} index={index} />
-                )
-            })}
+            <TreeView data={data} />
             <div style={{ border: '1px solid black', display: 'flex', flexDirection: 'column', alignItems: 'center' }} >
                 <EnterInput type='text' value={name} placeholder='Name' style={{ width: '100%', borderWidth: 0, margin: 2 }}
                     onChange={(e) => { setName(e.target.value) }}
