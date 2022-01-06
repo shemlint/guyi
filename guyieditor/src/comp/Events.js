@@ -23,7 +23,8 @@ const EventRow = ({ eventType = {}, view = {}, setApp, app }) => {
         }
         let tmpEvents=tmpView.events[eventType.name]
         if (choice === 'none') {
-            tmpEvents = {}
+            tmpView.events[eventType.name] = {}
+            tmpEvents={}
         } else {
             tmpEvents.method = choice
             if (basicComps.includes(view.name)) {
