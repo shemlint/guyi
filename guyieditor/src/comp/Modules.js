@@ -19,12 +19,14 @@ const Modules = ({ app = [], changeApp, setApp }) => {
     }
     const add = () => {
         let tname = name.trim();
-        tname.split('/').forEach(t=>{
-            if(t.length<3){
+        let nameOk = true
+        tname.split('/').forEach(t => {
+            if (t.length < 3) {
                 disMes('Some parts of name short(<3)')
-                return
+                nameOk = false
             }
         })
+        if (!nameOk) return
         if (tname.length < 3) {
             disMes('Name too short');
             return;
@@ -59,7 +61,6 @@ const Modules = ({ app = [], changeApp, setApp }) => {
         let module = tmpNewApp
         modules.push(module);
         setName('');
-
 
     }
     const deletem = (e, index) => {
@@ -116,15 +117,15 @@ const Modules = ({ app = [], changeApp, setApp }) => {
         )
     }
     const rename = (name, index) => {
-        let nameOk=true
-        name.split('/').forEach(t=>{
-           if(t.length<3){
+        let nameOk = true
+        name.split('/').forEach(t => {
+            if (t.length < 3) {
                 disMes('Some parts of name short(<3)')
                 console.log('here')
-                nameOk=false
+                nameOk = false
             }
         })
-        if(!nameOk)return
+        if (!nameOk) return
         let basicMods = [...dbasic, ...dhtml]
         if (basicMods.includes(name)) {
             disMes('Name taken by basic Comp')
@@ -238,6 +239,12 @@ const Modules = ({ app = [], changeApp, setApp }) => {
 
     const data = getTree()
     const names = getOrder(data)
+    const setModuleOrderGlobally = () => {
+        let otherNames = global.modules.map(m => m[0].name).filter(m => !names.includes(m))
+        let allNames = names.concat(otherNames).slice(1)
+         global.modulesOrder = allNames
+    }
+    setModuleOrderGlobally()
     const pinHanging = () => {
         const mods = []
         ex.forEach(e => {
@@ -248,25 +255,7 @@ const Modules = ({ app = [], changeApp, setApp }) => {
         data.nodes.push(...mods)
     }
     pinHanging()
-    const reorderMods = () => {
-        const names = getOrder(data)
-        ex.forEach(e => {
-            if (!names.includes(e.path)) {
-                names.push(e.path)
-            }
-        })
-        const newMods = []
-        //        const modNames = global.modules.map(m => m[0].name)
-        global.modules.forEach(m => {
-            let pos = names.indexOf(m[0].name)
-            if (pos !== -1) {
-                newMods[pos] = m
-            }
-        })
-        global.modules = newMods
-        modules = newMods
-    }
-    reorderMods()
+
     return (
         <div>
             <TreeView data={data.nodes} />

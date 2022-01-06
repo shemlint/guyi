@@ -244,7 +244,7 @@ const TestFormat = () => {
         setLayout(newLay)
     }
     const moduleChange = (dir) => {
-        let names = global.modules.map(m => m[0].name)
+        let names = global.modulesOrder||[]
         const pos = names.indexOf(app[0].name)
         let newPos = 0
         if (pos === -1) return
@@ -261,7 +261,9 @@ const TestFormat = () => {
                 newPos = pos + 1
             }
         }
-        changeApp(newPos)
+        const mNames=global.modules.map(m=>m[0].name)
+        const appPos=mNames.indexOf(names[newPos])
+        if(appPos!==-1)changeApp(appPos)
     }
     const shortCutsWrap = (e) => shortCuts(
         e,
