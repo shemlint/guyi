@@ -29,7 +29,7 @@ export const Column = React.forwardRef(
         if (styles.rdisabled !== true) {
             rprops.disabled = true
         }
-        useRipple(ref, rprops)
+        useRipple(styles.rdisabled !== true ? null : ref, rprops)
         return (
             <div onClick={onClick}
                 ref={ref}
@@ -79,10 +79,10 @@ export const Row = React.forwardRef(
             rippleColor: styles.rcolor,
             animationLength: styles.rlength, rippleSize: styles.rsize
         }
-        if (styles.rdisabled === false) {
+        if (styles.rdisabled !== true) {
             rprops.disabled = true
         }
-        useRipple(ref, rprops)
+        useRipple(styles.rdisabled !== true ? null : ref, rprops)
         return (
             <div onClick={onClick}
                 ref={ref}
@@ -133,7 +133,7 @@ export const View = React.forwardRef(({
     id = '',
     className = '',
     data = [],
-    styles:sty = {},
+    styles: sty = {},
     center = false,
     onClick = () => { },
 }, ref) => {
@@ -178,19 +178,17 @@ export const View = React.forwardRef(({
         rippleColor: sty.rcolor,
         animationLength: sty.rlength, rippleSize: sty.rsize
     }
-    if (sty.rdisabled === false) {
-        rprops.disabled = true
-    }
-    const getEvents=()=>{
-        let events={}
-        Object.entries(([k,v])=>{
-            if(k.startsWith('on')){
-                events[k]=v
+    
+    const getEvents = () => {
+        let events = {}
+        Object.entries(([k, v]) => {
+            if (k.startsWith('on')) {
+                events[k] = v
             }
         })
         return events
     }
-    useRipple(ref, rprops)
+    useRipple(sty.rdisabled !== true ? null : ref, rprops)
     return (
         <div
             ref={ref}

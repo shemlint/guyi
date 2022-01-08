@@ -255,7 +255,6 @@ const drawComp = (tree, id, prev = false, slData = {}, dynamic = false) => {
             if (typeof d === 'object' && !Array.isArray(d) && Object.keys(mapKeys).length < 1) {
                 props = { ...d }
             }
-            console.log(props)
             ext.index = index
             props.Extras = ext
             props.extras = ext
@@ -420,7 +419,7 @@ const drawComp = (tree, id, prev = false, slData = {}, dynamic = false) => {
     }
 
     if (node.name === 'Icon') {
-        let clicked = (node.events.onClick && typeof node.events.onClick === 'function') ? node.events.onClick : undefined
+        const clicked = getEvent('onClick')
         if (node.extras && md[node.extras]) {
             comp = React.createElement(md[node.extras], { key: id, size: node.props.Size, color: node.props.Color, onClick: clicked }, [])
         } else if (node.extras && fa[node.extras]) {
@@ -582,7 +581,6 @@ const drawComp = (tree, id, prev = false, slData = {}, dynamic = false) => {
             variant: props.Variant,
             value: props.Value || 0,
             valueBuffer: props.ValueBuffer || 0,
-            //java/kotlin
 
         }
         )

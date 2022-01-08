@@ -443,7 +443,7 @@ export const Res = ({ name = '', value = '', onChange = () => { } }) => {
         </div>
     )
 }
-export const Conditional = ({ name = '', value = { data: [] }, props, onChange }) => {
+export const Conditional = ({ name = '', value = [], props, onChange }) => {
     let data = value
     props.children = data.map(d => d[1])
 

@@ -383,6 +383,7 @@ const TestFormat = () => {
                     <RSL secondaryInitialSize={150} style={{ bakgroundcolor: 'green', padding: 12 }}>
                         <Tab pos={tabPos} id='workspace'
                             setPos={setTabPos}
+                            noScroll={[1]}
                             data={[
                                 {
                                     title: 'Design', comp: <Screen ><Comp tree={mutApp} id={app[1].id} state={appState} setState={setAppState} /></Screen>
@@ -432,6 +433,7 @@ const TestFormat = () => {
             <RSL vertical secondaryInitialSize={300} >
                 <Tab pos={tabPos} id='workspace'
                     setPos={setTabPos}
+                    noScroll={[1]}
                     data={[
                         {
                             title: 'Design', comp: <Screen ><Comp tree={mutApp} id={app[1].id} state={appState} setState={setAppState} view={view} /></Screen>

@@ -135,10 +135,16 @@ const Upload = ({ setUpload }) => {
         if (pos === -1) return []
 
         let deps = []
-        let basicMods = [...dBasic, ...dHtml]
+        let basicMods = [...dBasic, ...dHtml, 'Icon']
         module.forEach(c => {
             if (c.name !== comp && !basicMods.includes(c.name)) {
                 deps.push(c.name)
+            }
+            if (c.name === 'MapList' && c.props && c.props.Template) {
+                const template = c.props.Template
+                if (!basicMods.includes(template) && names.includes(template)) {
+                    deps.push(template)
+                }
             }
         })
         return deps
@@ -152,7 +158,7 @@ const Upload = ({ setUpload }) => {
     }
     let comps = global.modules.map(m => m[0].name)
     let deps = getDeps(mod, true).filter((val, index, data) => data.indexOf(val) === index)
-    let deepDeps = callGetDeepDeps(deps).filter(val => !deps.includes(val));
+    let deepDeps = callGetDeepDeps(deps).filter((val, i, a) => (!deps.includes(val)) && (a.indexOf(val) === i));
     const getUsedFiles = (moduleName) => {
         let loc_deps = getDeps(moduleName, true).filter((val, index, data) => data.indexOf(val) === index)
         let loc_deepDeps = callGetDeepDeps(loc_deps).filter(val => !deps.includes(val));
@@ -238,18 +244,18 @@ const Upload = ({ setUpload }) => {
             <div style={{ display: 'flex', alignItems: 'center' }}>
                 <div style={{ marginRight: 10, fontSize: 24, color: 'purple' }}>Component</div>
                 <Select value={mod} onChange={e => setMod(e.target.value)} >
-                    {comps.map(m => <MenuItem value={m}>{m}</MenuItem>)}
+                    {comps.map(m => <MenuItem key={m} value={m}>{m}</MenuItem>)}
                 </Select>
             </div>
             <div>
                 <div style={{ color: 'blue', borderBottom: '1px solid grey' }}>Dependencies</div>
                 <ol>
-                    {deps.map(d => <li style={{ textAlign: 'center' }} >{d}</li>)}
+                    {deps.map(d => <li key={d} style={{ textAlign: 'center' }} >{d}</li>)}
                 </ol>
                 {deps.length === 0 && <div style={{ textAlign: 'center' }} >None</div>}
                 <div style={{ color: 'red', borderBottom: '1px solid grey' }}>Hidden Dependencies</div>
                 <ol>
-                    {deepDeps.map(d => <li style={{ textAlign: 'center' }} >{d}</li>)}
+                    {deepDeps.map(d => <li key={d} style={{ textAlign: 'center' }} >{d}</li>)}
                 </ol>
                 {deepDeps.length === 0 && <div style={{ textAlign: 'center' }} >None</div>}
             </div>

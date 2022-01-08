@@ -85,21 +85,7 @@ const Manager = ({ app, setApp, setFull, layout, setLayout, runScripts, info: me
     const onDelete = async (appName = delmod) => {
         if (appName.trim() === '') disMes('Specify a name')
         let options = getOptions()
-        if (appName.startsWith('*')) {
-            const sufix = appName.slice(1)
-            options.forEach(p => {
-                if (p.includes(sufix)) {
-                    onDelete(p)
-                }
-            })
-        } else if (appName.endsWith('*')) {
-            const prefix = appName.slice(0, appName.length - 1)
-            options.forEach(p => {
-                if (p.includes(prefix)) {
-                    onDelete(prefix)
-                }
-            })
-        }
+       
         if (!options.includes(appName)) {
             disMes('Project not found ')
             return
@@ -107,7 +93,7 @@ const Manager = ({ app, setApp, setFull, layout, setLayout, runScripts, info: me
 
         await LocalForage.removeItem(appName)
         getKeys()//update project names in localstorage
-        disMes('Delted : ' + appName)
+        disMes('Deleted : ' + appName)
         setDelmod('')
 
     }
@@ -301,7 +287,7 @@ const Manager = ({ app, setApp, setFull, layout, setLayout, runScripts, info: me
                     </Select>
                 </div>
                 <div ref={anchor} style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-around' }}>
-                    <button onClick={onDelete} >Delete(browser)</button>
+                    <button onClick={()=>onDelete(delmod)} >Delete(browser)</button>
                     <Select
                         size='small'
                         value={delmod}

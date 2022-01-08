@@ -3,17 +3,18 @@ import { Scrollbars } from 'react-custom-scrollbars'
 
 const scrollData = {}
 
-const Tab = ({ data = [], pos = 0, setPos, id = '' }) => {
+const Tab = ({ data = [], pos = 0, setPos, id = '', noScroll = [] }) => {
     const [statepos, rawsetPos] = useState(pos);
     let realPos = statepos
     if (setPos) realPos = pos
     useEffect(() => {
         try {
             let tab = tabRef.current
+            if(!tab)return //noscrollbars eg tab for monaco
             tab.view.onscroll = () => {
                 scrollData[id + realPos] = tab.view.scrollTop
             }
-            tab.view.scrollTop = scrollData[id + realPos]||0
+            tab.view.scrollTop = scrollData[id + realPos] || 0
         } catch (e) {
             console.log('tab ref error ', e)
         }
@@ -41,19 +42,23 @@ const Tab = ({ data = [], pos = 0, setPos, id = '' }) => {
         )
     }
     const tabRef = React.useRef()
+    const dontScroll = noScroll.includes(realPos)
     return (
         <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-           <Scrollbars style={{width:'100%',height:28}}> 
-               <div style={{ display: 'flex',width: '100%', backgroundColor: 'grey',marginBottom:5}}>
-                {data.map((val, index) =>
-                    <Title key={val.title} title={val.title} index={index} />)}
-            </div>
+            <Scrollbars style={{ width: '100%', height: 28 }}>
+                <div style={{ display: 'flex', width: '100%', backgroundColor: 'grey', marginBottom: 5 }}>
+                    {data.map((val, index) =>
+                        <Title key={val.title} title={val.title} index={index} />)}
+                </div>
             </Scrollbars>
-            <Scrollbars style={{ width: '100%', flex: 1 }} ref={tabRef}  >
+            {!dontScroll && <Scrollbars style={{ width: '100%', flex: 1 }} ref={tabRef}  >
                 <div style={{ position: 'relative' }}>
                     {data[realPos].comp}
                 </div>
-            </Scrollbars>
+            </Scrollbars>}
+            {dontScroll && <div className='tab-noscroll' style={{ position: 'relative', overflow: 'hidden' }} >
+                {data[realPos].comp}
+            </div>}
         </div>
     )
 }
