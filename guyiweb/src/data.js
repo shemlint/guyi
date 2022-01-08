@@ -18,8 +18,14 @@ const propT = [
             { name: 'background', prop: 'background', type: 'text', value: '' },
             { name: 'Flex', prop: 'flex', type: 'number', value: 0 },
             { name: 'Overflow', prop: 'overflow', type: 'select,visible,hidden,auto,scroll' },
-            { name: 'Class', prop: 'className', type: 'text', value: '' },
+            { name: 'Cursor', prop: 'cursor', type: 'select,copy,crosshair,grab,help,move,no-drop,none,not-allowed,pointer,progress,revert,row-resize,text,unset,wait,zoom-in,zoom-out', value: 'select' },
+           { name: 'Class', prop: 'className', type: 'text', value: '' },
             { name: 'DomId', prop: 'id', type: 'text', value: '' },
+            { name: 'Position', prop: 'position', type: 'select,static,absolute,fixed,relative,sticky,initial,inherit', value: '' },
+            { name: 'Ripples', prop: 'rdisabled', type: 'bool', value: false },
+            { name: 'RippleColor', prop: 'rcolor', type: 'color', value: '' },
+            { name: 'RippleSize', prop: 'rsize', type: 'number', value: 100 },
+            { name: 'RippleLength', prop: 'rlength', type: 'number', value: 700 },
             { name: 'Children', prop: 'children', type: 'comps', value: [] },
         ]
     },
@@ -41,8 +47,14 @@ const propT = [
             { name: 'Flex', prop: 'flex', type: 'number', value: 0 },
             { name: 'Radius', prop: 'borderRadius', type: 'number', value: 0 },
             { name: 'Overflow', prop: 'overflow', type: 'select,visible,hidden,auto,scroll' },
+            { name: 'Cursor', prop: 'cursor', type: 'select,copy,crosshair,grab,help,move,no-drop,none,not-allowed,pointer,progress,revert,row-resize,text,unset,wait,zoom-in,zoom-out', value: 'select' },
             { name: 'Class', prop: 'className', type: 'text', value: '' },
             { name: 'DomId', prop: 'id', type: 'text', value: '' },
+            { name: 'Position', prop: 'position', type: 'select,static,absolute,fixed,relative,sticky,initial,inherit', value: '' },
+            { name: 'Ripples', prop: 'rdisabled', type: 'bool', value: false },
+            { name: 'RippleColor', prop: 'rcolor', type: 'color', value: '' },
+            { name: 'RippleSize', prop: 'rsize', type: 'number', value: 100 },
+            { name: 'RippleLength', prop: 'rlength', type: 'number', value: 700 },
             { name: 'Children', prop: 'children', type: 'comps', value: [] },
         ]
     },
@@ -81,7 +93,7 @@ const propT = [
             { name: 'BR', prop: 'borderRight', type: 'text', value: '' },
             { name: 'BB', prop: 'borderBottom', type: 'text', value: '' },
             { name: 'BL', prop: 'borderLeft', type: 'text', value: '' },
-            { name: 'Positon', prop: 'position', type: 'select,static,absolute,fixed,relative,sticky,initial,inherit', value: '' },
+            { name: 'Position', prop: 'position', type: 'select,static,absolute,fixed,relative,sticky,initial,inherit', value: '' },
             { name: 'Left', prop: 'left', type: 'number', value: 0 },
             { name: 'Right', prop: 'right', type: 'number', value: 0 },
             { name: 'Bottom', prop: 'bottom', type: 'number', value: 0 },
@@ -92,7 +104,11 @@ const propT = [
             { name: 'BackgroundSize', prop: 'backgroundSize', type: 'select,cover,auto,contain', value: 'cover' },
             { name: 'Class', prop: 'className', type: 'text', value: '' },
             { name: 'DomId', prop: 'id', type: 'text', value: '' },
-            { name: 'Child', prop: 'child', type: 'comp', value: [] },
+            { name: 'Ripples', prop: 'rdisabled', type: 'bool', value: false },
+            { name: 'RippleColor', prop: 'rcolor', type: 'color', value: '' },
+            { name: 'RippleSize', prop: 'rsize', type: 'number', value: 100 },
+            { name: 'RippleLength', prop: 'rlength', type: 'number', value: 700 },
+            { name: 'Child', prop: 'child', type: 'comps', value: [] },
         ]
     },
     {
@@ -101,7 +117,7 @@ const propT = [
             { name: 'Value', prop: 'value', type: 'text', value: '   ' },
             { name: 'FontSize', prop: 'fontSize', type: 'number', value: 16 },
             { name: 'Color', prop: 'color', type: 'color', value: '#333' },
-            { name: 'Style', prop: 'color', type: 'select,narmal,italic,obligue,inherit,initial', value: 'normal' },
+            { name: 'Style', prop: 'fontStyle', type: 'select,normal,italic,obligue,inherit,initial', value: 'normal' },
             { name: 'FontWeight', prop: 'fontWeight', type: 'select,normal,bold,bolder' },
             { name: 'Decoration', prop: 'textDecoration', type: 'select,none,underline,line-through,overline' },
             { name: 'TextAlign', prop: 'textAlign', type: 'select,left,center,right', value: 'left' },
@@ -240,7 +256,7 @@ const propT = [
             { name: 'Children', prop: 'Children', type: 'comps', value: [] },
         ]
     },
-    {
+    {//mbutton
         type: 'MButton',
         props: [
             { name: 'Value', prop: 'Value', type: 'text', value: '' },
@@ -249,7 +265,6 @@ const propT = [
             { name: 'Size', prop: 'Size', type: 'select,small,medium,large' },
             { name: 'Disabled', prop: 'Disabled', type: 'bool', value: false },
             { name: 'Elevation', prop: 'Elevation', type: 'bool', value: false },
-            { name: 'Child', prop: 'Child', type: 'comp', value: [] }
         ]
     },
     {
@@ -480,6 +495,8 @@ const propT = [
 //#region
 const eventT = [
     { name: 'Button', events: [{ name: 'onClick', args: 'e' }, { name: 'onDbCLick', args: 'e' }] },
+    { name: 'Column', events: [{ name: 'onClick', args: 'e' }] },
+    { name: 'Row', events: [{ name: 'onClick', args: 'e' }] },
     { name: 'View', events: [{ name: 'onClick', args: 'e' }, { name: 'onDbCLick', args: 'e' }] },
     { name: 'TextInput', events: [{ name: 'onChange', args: 'e', }, { name: 'onClick', args: 'e', }] },
     { name: 'Icon', events: [{ name: 'onClick', args: 'e' }] },
@@ -501,7 +518,11 @@ const eventT = [
     { name: 'MSelect', events: [{ name: 'onChange', args: 'val' }] }
 ]
 
-const getCodeClass = (code, tree = [], prev = false, inst = {}) => {
+const getCodeClass = (code, prev = false, inst = {}) => {
+    let tree = []
+    if (inst.props && inst.props.tree) {
+        tree = inst.props.tree
+    }
     const mergeState = (...args) => {
         try {
             let tmpState = { ...inst.state }
@@ -517,12 +538,16 @@ const getCodeClass = (code, tree = [], prev = false, inst = {}) => {
     }
 
     const tiePS = (id, prop, value, defValue, warn = true) => {
-        let ids = tree.map(val => val.id)
-        let pos = ids.indexOf(id)
+        let locTree = []
+        if (inst.props && inst.props.tree) {
+            locTree = inst.props.tree
+        }
+        const ids = locTree.map(val => val.id)
+        const pos = ids.indexOf(id)
         if (pos === -1) return null
-        let props = tree[pos].props
+        let props = locTree[pos].props
         if (ids.includes(id)) {
-            let type = tree[ids.indexOf(id)].name
+            let type = locTree[ids.indexOf(id)].name
             let pts = propT.map(t => t.type)
             let pos = pts.indexOf(type)
             if (pos !== -1) {
@@ -591,8 +616,8 @@ const getCodeClass = (code, tree = [], prev = false, inst = {}) => {
         let instance = new c({
             getState: () => inst.state, tiePS, getRef, toFile, mergeState,
             getFile, reactClass: inst, setState: (s) => inst.setState(s),
-            getProps: () => inst.classInst.instance.props,
-            getEvents: () => inst.classInst.instance.events,
+            getProps: () => inst.props.tree[0].props,
+            getEvents: () => inst.events,
             getExtras: () => inst.parentData,
         })
         if (typeof instance === 'object') {
@@ -617,5 +642,5 @@ const getCodeClass = (code, tree = [], prev = false, inst = {}) => {
     return { instance: {}, keys: [], methods: [], props: [] }
 }
 
-export {propT,eventT,getCodeClass}
+export { propT, eventT, getCodeClass }
 

@@ -12,5 +12,5 @@ gulp.task("default",()=>{
 		ignore:['png'],
 	})
 	)
-	.pipe(gulp.dest("./built1"));
+	.pipe(gulp.dest("./build1"));
 });

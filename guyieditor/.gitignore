@@ -11,6 +11,7 @@
 # production
 /build
 /built1
+/build1
 # misc
 .DS_Store
 .env.local

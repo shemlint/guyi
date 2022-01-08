@@ -29,7 +29,7 @@ const Reload = ({ setReload }) => {
 
 }
 let lastOpened = ''
-const AppSelect = ({ setShowApp, startApp }) => {
+const AppSelect = ({ setShowApp, startApp, openLoad ,setShowChange}) => {
   const [loaded, setLoaded] = useState(false)
   const [apps, setApps] = useState([])
 
@@ -69,11 +69,19 @@ const AppSelect = ({ setShowApp, startApp }) => {
   }
   const saveApp = (app) => {
     try {
-      let name=app.modules[0][0].name
-      const a=window.document.createElement('a')
-      a.href=URL.createObjectURL(new Blob([JSON.stringify(app)],{type:'text/plain'}))
-      a.download=`Guyi-app,${name}`
+      let name = app.modules[0][0].name
+      const a = window.document.createElement('a')
+      a.href = URL.createObjectURL(new Blob([JSON.stringify(app)], { type: 'text/plain' }))
+      a.download = `Guyi-app,${name}`
       a.click()
+      if (global.process.platform === 'phone') {
+        const res = window.navigator.clipboard.writeText(JSON.stringify(app))
+        if (res) {
+          alert('Guyi app <bold>saved</bold> to clipboard')
+        } else {
+          alert('could not copy app to clipboard')
+        }
+      }
     } catch (e) {
       console.log('save app error', e.message)
     }
@@ -96,7 +104,7 @@ const AppSelect = ({ setShowApp, startApp }) => {
             break
         }
       }
-       
+
       let name = app.modules[0][0].displayName || app.modules[0][0].name || "UnNamed"
       const color = () => `rgb(${Math.floor(Math.random() * 125)},${Math.floor(Math.random() * 125)}` +
         `,${Math.floor(Math.random() * 125)})`
@@ -140,10 +148,11 @@ const AppSelect = ({ setShowApp, startApp }) => {
         Saved Guyi Apps
       </div>
       <div style={{ position: 'absolute', top: 5, right: 5 }}>
-        <button onClick={() => setShowApp(false)} >Close</button>
+        <button onClick={() => store.set('showapp',false,openLoad)} >Dev.</button>
+        <button onClick={() => {setShowApp(false);setShowChange(false)}} >Close</button>
       </div>
       {!loaded && loading}
-      {loaded && apps.length === 0 && <div>NO APPS YET</div>}
+      {loaded && apps.length === 0 && <h1 style={{color:'blue'}} >NO APPS YET</h1>}
       {apps.map((app, i) => <App app={app} index={i} />)}
     </div>
   )
@@ -240,6 +249,34 @@ const updateAppStore = async (app) => {
 
 let wsRef = null
 let loadedShortcut = false
+const store = {
+  set(key, val, cb) {
+    try {
+      localStorage.setItem(key, val)
+    } catch {
+      console.warn('store set error ' + key)
+    }
+    if (cb) {
+      cb(val)
+    }
+  },
+  get(key) {
+    let res = localStorage.getItem(key)
+    if (key === 'showapp') {
+      try{
+        res=JSON.parse(res)
+      }catch{}
+       if (typeof res !== 'boolean') {
+        return false
+      } else {
+        return res
+      }
+     
+    }
+    return res
+  }
+
+}
 const App = () => {
   const [loaded, setLoaded] = useState(false)
   const [app, setApp] = useState([])
@@ -301,7 +338,7 @@ const App = () => {
             let got = await restoreApp(val)
             if (got) {
               setMinimal(true)
-              setShowApp(false)
+              store.set('showapp', false, setShowApp)
               loadedShortcut = true
             }
           }
@@ -387,13 +424,13 @@ const App = () => {
   }
   global.process = {}
   global.process.os = global.guyi_os
-  if (global.Phone ){
+  if (global.Phone) {
     global.process.platform = "phone"
   } else if (global.Desk) {
     global.process.platform = "desk"
   } else {
     global.process.platform = "web"
-    global.process.os="web"
+    global.process.os = "web"
   }
 
   let appComp = <div>Load Error</div>
@@ -481,7 +518,13 @@ const App = () => {
         }} >
           <button onClick={() => setReload(true)}
             style={{ fontSize: 12, opacity: 0.4, fontWeight: 'bolder', border: '2px solid red' }} >Reload</button>
-          <button onClick={() => setShowChange(!showChange)}
+          <button onClick={() => {
+           if (store.get('showapp')) {
+              setShowApp(true)
+            } else {
+              setShowChange(!showChange)
+            }
+          }}
             style={{ fontSize: 12, opacity: 0.4, fontWeight: 'bolder', border: '2px solid red' }} >Open</button>
         </div>
       )
@@ -493,13 +536,13 @@ const App = () => {
         position: 'absolute', bottom: 0, width: '100%', backgroundColor: 'rgba(0,0,250,0.4)', zIndex: '1000000000'
       }} >
         <div style={{ padding: 4 }} >
-          <div >File: <input type='file' onChange={open} /></div>
+          <div >New App: <input type='file' onChange={open} /></div>
           <div>Server: <input value={url} onChange={e => setUrl(e.target.value)} /></div>
           <button onClick={connect} style={{ backgroundColor: wsRef ? 'green' : 'aqua', color: 'white' }} >
             {wsRef ? 'Disconnect' : 'Connect'}
           </button>
           <div style={{ display: 'flex', flexWrap: 'wrap', width: '100%', justifyContent: 'space-around' }}>
-            <button onClick={() => setShowApp(true)}>Apps</button>
+            <button onClick={() => {store.set('showapp',true,setShowApp)}} >Apps</button>
             <button onClick={fetchApp}>Fetch app</button>
             <button onClick={() => setReload(true)}>Reload</button>
             <button onClick={() => setShowChange(false)}>Close</button>
@@ -513,8 +556,11 @@ const App = () => {
     return <Reload setReload={setReload} />
   }
   if (showApp) {
-    return <AppSelect startApp={startApp} setShowApp={setShowApp} />
-
+    return <AppSelect startApp={startApp} setShowApp={setShowApp} setShowChange={setShowChange} openLoad={() => {
+      setShowApp(false)
+      setShowChange(true)
+      setMinimal(false)
+    }} />
   }
   return (
     <div style={{ display: 'flex', height: '100vh', flexDirection: 'column' }}>

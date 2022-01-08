@@ -3,7 +3,6 @@ import { Row, Column, View, Text, Button, Image, ErrorBoundary } from './BaseCom
 import * as md from 'react-icons/md'
 import * as fa from 'react-icons/fa'
 import * as bi from 'react-icons/bi'
-import Ripples from 'react-ripples'
 
 import MButton from '@material-ui/core/Button'
 import MTextField from '@material-ui/core/TextField'
@@ -30,13 +29,17 @@ import MenuItem from '@material-ui/core/MenuItem'
 
 import { getCodeClass } from './data'
 
+
 const drawComp = (tree, id, prev = false, slData = {}, dynamic = false) => {
     const inst = slData.inst
     let dynamicCount = slData.dynamicCount
 
     let comp = <p>unknown</p>
     const cnames = tree.map(c => c.id)
+
+
     let pos = cnames.indexOf(id)
+
     if (pos === -1 && !dynamic)
         return comp
     let node = {}
@@ -66,20 +69,23 @@ const drawComp = (tree, id, prev = false, slData = {}, dynamic = false) => {
         return ref
     }
     const getEvent = (type) => {
-        try {
-            let m = events[type] || ''
-            let p = slData.class.instance[m]
-            if (typeof p === 'function') {
-                return (...args) => {
-                    try { return slData.class.instance[m](...args) }
-                    catch (e) { console.warn(`Method ${type}[${m}] error ${e.message}`, e, slData.class) }
-                }
-            } else {
-                return undefined
+        //try {
+        const m = events[type] ? events[type].method : ''
+        const args = (events[type] && events[type].args) ? events[type].args : ''
+        const userArgs = args === '' ? [] : args.split(',')
+        let p = slData.class[m]
+        if (typeof p === 'function') {
+            //let userArgs=events
+            return (...args) => {
+                try { return slData.class[m](...userArgs, ...args) }
+                catch (e) { console.warn(`Method ${type}[${m}] error ${e.message}`, e) }
             }
-        } catch (e) {
-            console.log(e, slData)
+        } else {
+            return undefined
         }
+        // } catch (e) {
+        //     console.log(e)
+        // }
     }
     const drawChilds = (name) => {
         let childs = node.props[name]
@@ -130,12 +136,14 @@ const drawComp = (tree, id, prev = false, slData = {}, dynamic = false) => {
     if (node.name === 'Column') {
         let styleProps = { ...props, children: '' }
         comp = <Column key={id} ref={getRef()} data={drawChilds('children')} styles={styleProps}
-            className={props.className} id={props.id} />
+            className={props.className} id={props.id}
+            onClick={getEvent('onClick')} />
     }
     if (node.name === 'Row') {
         let styleProps = { ...props, children: '' }
         comp = <Row key={id} ref={getRef()} data={drawChilds('children')} styles={styleProps}
-            className={props.className} id={props.id} />
+            className={props.className} id={props.id}
+            onClick={getEvent('onClick')} />
     }
     if (node.name === 'View') {
         let backImage = ''
@@ -156,8 +164,8 @@ const drawComp = (tree, id, prev = false, slData = {}, dynamic = false) => {
             backImage = `url(${src})`
         }
         let styleProps = { ...props, children: '', backgroundImage: backImage }
-        comp = <View key={id} ref={getRef()} data={drawChilds('child')} styles={styleProps} center={props.center}
-            onClick={getEvent('onClick')}
+        comp = <View key={id} ref={getRef()} data={drawChilds('child')} styles={styleProps}
+            center={props.center} onClick={getEvent('onClick')}
             className={props.className} id={props.id}
         />
     }
@@ -233,7 +241,7 @@ const drawComp = (tree, id, prev = false, slData = {}, dynamic = false) => {
         let map = getProps('Mapping')
         let extras = getProps('Extras')
         let mapKeys = Object.keys(map)
-        //let unionKeys=mapKeys.filter(k=>dataKeys.includes(k))
+        //let unionKeys=mapKeys.filter(pname=>dataKeys.includes(k))
         let compiled = []
         let allmodules = global.modules.concat(global.remodules)
         let modNames = allmodules.map(m => m[0].name);
@@ -245,6 +253,9 @@ const drawComp = (tree, id, prev = false, slData = {}, dynamic = false) => {
             mapKeys.forEach(k => {
                 props[map[k]] = d[k]
             })
+            if (typeof d === 'object' && !Array.isArray(d) && Object.keys(mapKeys).length < 1) {
+                props = { ...d }
+            }
             ext.index = index
             props.Extras = ext
             props.extras = ext
@@ -279,20 +290,22 @@ const drawComp = (tree, id, prev = false, slData = {}, dynamic = false) => {
         }
         let dataObj = props.Routes
         let data = dataObj
+
         let compiled = []
         data.forEach(d => {
             try {
                 //eslint-disable-next-line
-                let anony = new Function('code', `return ${d[0]}`)
-                if (anony(slData.class.instance)) {
+                let anony = new Function('main', `return ${d[0]}`)
+                if (anony(slData.class)) {
                     let pos = tree.map(c => c.id).indexOf(d[1])
                     if (pos !== -1) {
                         tree[pos].props.Extras = Extras
                     }
                     compiled.push(drawComp(tree, d[1], prev, slData))
                 }
+
             }
-            catch (e) { console.warn(`Conditionlist error (${d[0] + ' ' + d[1]}) :`, e.message) }
+            catch (e) { console.warn(`ConditionList error (${d[0] + ' ' + d[1]}) :`, e.message) }
 
         })
         props.children = [...new Set(data.map(d => d[1]))] //.filter((v,i,a)=>a.indexOf(v)===i)
@@ -305,12 +318,12 @@ const drawComp = (tree, id, prev = false, slData = {}, dynamic = false) => {
             onClick={getEvent('onClick')}
         />
     }
-    if (node.name === 'Ripples') {
+    if (node.name === 'Ripples') {//exists only forbackward compatibility
         let child = props.Child && props.Child[0] ? drawComp(tree, props.Child[0], prev, slData) : <div></div>
-        comp = <Ripples style={{ width: '100%', height: '100%' }} color={props.Color}
+        comp = <div style={{ width: '100%', height: '100%' }} color={props.Color}
             during={props.During}
             onClick={getEvent('onClick')}
-        >{child}</Ripples>
+        >{child}</div>
     }
     if (node.name === 'Video') {
         let src = props.src
@@ -354,12 +367,12 @@ const drawComp = (tree, id, prev = false, slData = {}, dynamic = false) => {
     }
     if (node.name === 'ReactRaw') {
         try {
-            const inst = slData.class.instance
+            const inst = slData.class
             if (typeof inst[props.Function] !== 'function') throw new Error(`(${props.Function}) Not a function`)
-            const childs=drawChilds('Children')
-            const reactComp = inst[props.Function]({children:childs})
+            const childs = drawChilds('Children')
+            const reactComp = inst[props.Function]({ children: childs })
             if (React.isValidElement(reactComp)) {
-                comp = <ErrorBoundary comp={reactComp}  />
+                comp = <ErrorBoundary comp={reactComp} />
             } else {
                 throw new Error('Not a react element')
             }
@@ -407,7 +420,7 @@ const drawComp = (tree, id, prev = false, slData = {}, dynamic = false) => {
     }
 
     if (node.name === 'Icon') {
-        let clicked = (node.events.onClick && typeof node.events.onClick === 'function') ? node.events.onClick : undefined
+        const clicked = getEvent('onClick')
         if (node.extras && md[node.extras]) {
             comp = React.createElement(md[node.extras], { key: id, size: node.props.Size, color: node.props.Color, onClick: clicked }, [])
         } else if (node.extras && fa[node.extras]) {
@@ -569,7 +582,6 @@ const drawComp = (tree, id, prev = false, slData = {}, dynamic = false) => {
             variant: props.Variant,
             value: props.Value || 0,
             valueBuffer: props.ValueBuffer || 0,
-            //java/kotlin
 
         }
         )
@@ -744,17 +756,22 @@ const drawComp = (tree, id, prev = false, slData = {}, dynamic = false) => {
 const updateApp = (tree) => {
     if (tree[0].funcs && tree[0].funcs.length > 1) {
         let funcs = tree[0].funcs
-        let code = `//code auto imported but with errors
-        class main {
-        constructor({getState,setState,mergeState,tiePS,getRef}){
-            this.gs=getState
-            this.ss=setState
-            this.ms=mergeState
-            this.tiePS=tiePS
-            this.getRef=getRef
-        }
-        //put code below :)
-        `
+        let code =
+            `//code auto imported but with errors
+class main {
+    constructor({ getState, setState, mergeState, tiePS, getRef, getProps, getEvents, getExtras }) {
+        this.gs = getState
+        this.ss = setState
+        this.ms = mergeState
+        this.tiePS = tiePS
+        this.getRef = getRef
+        this.gp = getProps
+        this.gv = getEvents
+        this.gx = getExtras
+    }
+    //put code below :)
+
+`
         funcs.forEach((f, i) => {
             if (i === 0) return
             code += `
@@ -789,7 +806,7 @@ class Comp extends React.Component {
         this.state = {}
         this.parentData = {}
         this.propsEvents = {}
-        this.classInst = getCodeClass(props.tree[0].classCode, props.tree, props.prev, this)
+        this.classInst = getCodeClass(props.tree[0].classCode, props.prev, this).instance
         this.guyiInit()
     }
     componentDidMount() {
@@ -815,10 +832,10 @@ class Comp extends React.Component {
 
     runMagicFunc(name) {
         try {
-            if (this.classInst.instance[name]) {
-                this.classInst.instance[name]()
+            if (this.classInst[name]) {
+                this.classInst[name]()
             }
-        } catch (e) { console.log(`${this.props.tree[0].name} ${name} error`, e.message) }
+        } catch (e) { console.log(`${this.props.tree[0].name} ${name} error`, e.message, e) }
     }
     getParentData() {
         let { tree } = this.props
@@ -839,32 +856,33 @@ class Comp extends React.Component {
             index: initIndex,
             name: tree[0].name,
             props: tree[0].props, events: tree[0].events,
-            instance: this.classInst.instance,
+            instance: this.classInst,
         }
         this.parentData = parentData
-        this.classInst.instance.props = tree[0].props
-        // this.classInst.instance.extras=parentData
+        this.classInst.props = tree[0].props
+        // this.classInst.extras=parentData
         this.setEvents()
         return parentData
     }
     setEvents() {
         const events = {}
         let pd = Object.values(this.parentData).map(d => [d.name, d.instance])
-        Object.entries(this.props.tree[0].events).forEach(([k, v]) => {
-            if (k.includes(',')) {
-                let [mod, name] = k.split(',')
-                pd.forEach(([n, m]) => {
-                    if (n === mod) {
-                        events[name] = (...args) => {
+        Object.entries(this.props.tree[0].events).forEach(([method, inst]) => {
+            if (inst.module) {
+                let mod = inst.module, name = inst.method, args = inst.args || ''
+                const userArgs = args === '' ? [] : args.split(',')
+                pd.forEach(([passedmod, m]) => {
+                    if (passedmod === mod) {
+                        events[method] = (...args) => {
                             try {
-                                return m[v](...args)
+                                return m[name](...userArgs, ...args)
                             } catch (e) { console.log(`Error ${this.props.tree[0].name}[${name}] ${e.message}`) }
                         }
                     }
                 })
             }
         })
-        this.classInst.instance.events = events
+        this.events = events
     }
 
     render() {
