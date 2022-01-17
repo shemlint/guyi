@@ -383,6 +383,10 @@ const drawComp = (tree, id, prev = false, slData = {}, dynamic = false) => {
     //#endregion 
 
     //render remodules
+    const setModuleRef = (ref) => {
+        inst.usedRefs[id] = { current: ref }
+    }
+
     if (!prev) {
         let names = global.modules.map(m => m[0].name);
         let renames = global.remodules.map(m => m[0].name);
@@ -393,7 +397,7 @@ const drawComp = (tree, id, prev = false, slData = {}, dynamic = false) => {
             tree[0].props = node.props
             tree[0].props.extras = slData.parentData
             tree[0].events = node.events
-            comp = <Comp key={id} tree={tree} id={tree[1].id} prev={prev} />
+            comp = <Comp setRef={setModuleRef} key={id} tree={tree} id={tree[1].id} prev={prev} />
 
         } else if (renames.includes(node.name)) {
             let pos = renames.indexOf(node.name)
@@ -401,7 +405,7 @@ const drawComp = (tree, id, prev = false, slData = {}, dynamic = false) => {
             tree[0].props = node.props
             tree[0].props.extras = slData.parentData
             tree[0].events = node.events
-            comp = <Comp key={id} tree={tree} id={tree[1].id} prev={prev} />
+            comp = <Comp setRef={setModuleRef} key={id} tree={tree} id={tree[1].id} prev={prev} />
 
         }
     } else {
@@ -413,7 +417,7 @@ const drawComp = (tree, id, prev = false, slData = {}, dynamic = false) => {
                 tree[0].props = node.props
                 tree[0].props.parentData = slData.parentData
                 tree[0].events = node.events
-                comp = <Comp key={id} tree={tree} id={tree[1].id} prev={prev} />
+                comp = <Comp setRef={setModuleRef} key={id} tree={tree} id={tree[1].id} prev={prev} />
             }
         }
     }
@@ -762,8 +766,8 @@ class main {
         this.gs = getState
         this.ss = setState
         this.ms = mergeState
-        this.tiePS = tiePS
-        this.getRef = getRef
+        this.tps = tiePS
+        this.gr = getRef
         this.gp = getProps
         this.gv = getEvents
         this.gx = getExtras
@@ -887,6 +891,9 @@ class Comp extends React.Component {
     render() {
         let { tree, id, prev } = this.props
         this.guyiUpdate()
+        if (typeof this.props.setRef === 'function') {
+            this.props.setRef(this.classInst)
+        }
         return drawComp(tree, id, prev,
             {
                 usedRefs: this.usedRefs, dynamicCount: this.dynamicCount, parentData: this.getParentData(),

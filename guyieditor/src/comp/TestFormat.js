@@ -244,7 +244,7 @@ const TestFormat = () => {
         setLayout(newLay)
     }
     const moduleChange = (dir) => {
-        let names = global.modulesOrder||[]
+        let names = global.modulesOrder || []
         const pos = names.indexOf(app[0].name)
         let newPos = 0
         if (pos === -1) return
@@ -261,9 +261,9 @@ const TestFormat = () => {
                 newPos = pos + 1
             }
         }
-        const mNames=global.modules.map(m=>m[0].name)
-        const appPos=mNames.indexOf(names[newPos])
-        if(appPos!==-1)changeApp(appPos)
+        const mNames = global.modules.map(m => m[0].name)
+        const appPos = mNames.indexOf(names[newPos])
+        if (appPos !== -1) changeApp(appPos)
     }
     const shortCutsWrap = (e) => shortCuts(
         e,
@@ -385,12 +385,8 @@ const TestFormat = () => {
                             setPos={setTabPos}
                             noScroll={[1]}
                             data={[
-                                {
-                                    title: 'Design', comp: <Screen ><Comp tree={mutApp} id={app[1].id} state={appState} setState={setAppState} /></Screen>
-                                },
-                                {
-                                    title: 'Code', comp: <Functions app={app} setApp={setApp} />
-                                },
+                                { title: 'Design', comp: <Screen ><Comp key={app[0].name} tree={mutApp} id={app[1].id} view={view} /></Screen> },
+                                { title: 'Code', comp: <Functions key={app[0].name} app={app} setApp={setApp} /> },
                                 { title: 'Exports', comp: <Exports app={app} setApp={setApp} /> },
                                 { title: 'Resources', comp: <Resources /> },
                                 { title: 'Modules', comp: <ExModules app={app} setApp={setApp} /> },
@@ -435,12 +431,8 @@ const TestFormat = () => {
                     setPos={setTabPos}
                     noScroll={[1]}
                     data={[
-                        {
-                            title: 'Design', comp: <Screen ><Comp tree={mutApp} id={app[1].id} state={appState} setState={setAppState} view={view} /></Screen>
-                        },
-                        {
-                            title: 'Code', comp: <Functions app={app} setApp={setApp} />
-                        },
+                        { title: 'Design', comp: <Screen ><Comp key={app[0].name} tree={mutApp} id={app[1].id} view={view} /></Screen> },
+                        { title: 'Code', comp: <Functions key={app[0].name} app={app} setApp={setApp} /> },
                         { title: 'Exports', comp: <Exports app={app} setApp={setApp} /> },
                         { title: 'Resources', comp: <Resources /> },
                         { title: 'Modules', comp: <ExModules app={app} setApp={setApp} /> },
