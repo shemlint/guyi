@@ -5,12 +5,12 @@ import { Scrollbars } from 'react-custom-scrollbars'
 import { Console, Hook, Unhook } from 'console-feed'
 import LocalForage from 'localforage'
 
-import * as THREE from 'three/build/three.module'
+import * as THREE from 'three'
 import htm from 'htm'
 
 import { propT, eventT } from './util/data'
-import { fetchApp, initApp, shortCuts, changeSync, newApp } from './util/store'
-
+import { fetchApp, initApp, shortCuts, changeSync } from './util/store'
+import {newApp} from './util/data'
 import Tab from './util/Tab'
 import Comp from './Comp'
 import Properties from './Properties'
@@ -56,6 +56,7 @@ global.rootUrl = 'http://shemlint.orgfree.com/'
 global.x = {}
 global.process = { platform: 'web' }
 global.user = {}
+global.monacoModels={}
 
 const set = global.store.set
 const get = global.store.get
@@ -216,10 +217,10 @@ const TestFormat = () => {
         global.remodules = data.remodules || []
         global.files = data.files || []
         global.appData = {}
+        global.monacoModels={}
         disMes('opened')
         runScripts()
-
-        setApp(global.modules[0])
+         setApp(global.modules[0])
         // setView(global.modules[0][1])
         setStartId()
         try {

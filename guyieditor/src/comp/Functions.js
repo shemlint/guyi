@@ -1,15 +1,16 @@
 import React, { useState } from 'react'
-import Editor,{loader} from '@monaco-editor/react'
+import Editor, { loader, useMonaco } from '@monaco-editor/react'
 import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
 import { getCodeClass } from './util/data'
 //import reactTypes from './react.d.ts'
 
 loader.config({
-    paths:{
-        vs:'/vs'
+    paths: {
+        vs: '/vs'
     }
 })
+
 const set = global.store.set
 const get = global.store.get
 window.codeChangeEvent = new Event('codechange')
@@ -17,7 +18,14 @@ const Functions = ({ app, setApp }) => {
     const [code, setCode] = useState(app[0].classCode || '')
     const [test, setTest] = useState(get('lasttest'))
     const [minimap, setMinimap] = useState(get('mipmapopen'))
+    const monaco = useMonaco()
+    const models=global.monacoModels
+    React.useEffect(() => {
+        if (monaco) {
+            // console.log(monaco,monaco.create())
 
+        }
+    }, [monaco])
     const updateCode = (newCode) => {
         setCode(newCode)
     }
@@ -49,6 +57,18 @@ const Functions = ({ app, setApp }) => {
         tmpApp[0].classCode = code
         window.dispatchEvent(window.codeChangeEvent)
         setApp(tmpApp)
+        saveModel()
+
+    }
+    const saveModel = () => {
+        try {
+            if (editorRef.current) {
+                const viewState = editorRef.current.saveViewState()
+                models[app[0].name].viewState = viewState
+            }
+        } catch (e) {//TODO error to be worked on 
+            //   console.log('save error',e)
+        }
     }
     const testMethod = () => {
         try {
@@ -58,20 +78,53 @@ const Functions = ({ app, setApp }) => {
             console.log(e)
         }
     }
-   
+    const handeleMount = (editor, monaco) => {
+        try {
+            const appName = app[0].name
+            editorRef.current = editor
+            if (!models[appName]) {
+                try {
+                    const names = monaco.editor.getModels().map(m => ({ path: m?._associatedResource?.path, model: m }))
+                    const paths = names.map(m => m.path)
+                    const modPos = paths.indexOf(`/${appName}`)
+                    if (modPos !== -1 && !models[appName]) {
+                        models[appName] = { model: names[modPos].model }
+                    } else {
+                        const model = monaco.editor.createModel(app[0].classCode, 'javascript', new monaco.Uri().with({ path: appName }))
+                        models[appName] = { model }
+                    }
+                } catch (e) {//TODO model exists
+                    //        console.log('model create', e)
+                }
+            }
+            const { model, viewState } = models[appName]
+            try {
+                editor.setModel(model)
+            } catch (e) {//TODO model exists
+                // console.log('editoy model', e)
+            }
+            if (viewState) editor.restoreViewState(viewState)
+        } catch (e) {//TODO error to be worked on
+            //console.log('mount error', e)
+        }
+    }
+    const editorRef = React.useRef(null)
+    const contRef = React.useRef(null)
     let methods = getCodeClass(code).methods
     return (
-        <div onKeyDown={keyDown}
+        <div onKeyDown={keyDown} ref={contRef}
             style={{ position: 'relative', height: '100%', display: 'flex', flexDirection: 'column' }}
         >
             <Editor
-                value={code}
+                // value={code}
                 onChange={updateCode}
                 theme='vs-dark'
-                path={app[0].name}
+                // path={app[0].name}
                 defaultLanguage='javascript'
                 height={"100vh"}
                 options={{ minimap: { enabled: minimap } }}
+                onMount={handeleMount}
+                keepCurrentModel={true}
             />
             <div style={{ position: 'absolute', top: 0, right: 0 }} >
                 <input type='checkbox' checked={minimap} onChange={(e) => set('mipmapopen', e.target.checked, setMinimap)} />

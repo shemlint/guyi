@@ -9,7 +9,7 @@ import LocalForage from 'localforage'
 
 import { BsInfoCircle } from 'react-icons/bs'
 import ToolsMenu from './subcomp/ToolsMenu'
-import { newApp } from './util/store'
+import { newApp } from './util/data'
 
 const set = global.store.set
 const get = global.store.get
@@ -153,9 +153,9 @@ const Manager = ({ app, setApp, setFull, layout, setLayout, runScripts, info: me
             disMes('opened')
             global.appData = {}
             runScripts()
+            global.monacoModels={}
             setApp(global.modules[0])
             setStartId()
-
         } catch (e) {
             disMes('Loading projo failed ' + e.message)
         }
@@ -172,7 +172,7 @@ const Manager = ({ app, setApp, setFull, layout, setLayout, runScripts, info: me
         global.files = []
         global.created = 0
         global.appData = {}
-
+global.monacoModels={}
         setApp(global.modules[0])
 
     }

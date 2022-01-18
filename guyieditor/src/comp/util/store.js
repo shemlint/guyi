@@ -84,36 +84,6 @@ global.schema = {
 const get = global.store.get
 const set = global.store.set
 
-
-const newApp = [
-    {
-        name: 'Main', state: {}, locals: {}, propTypes: [], funcs: [{
-            name: 'globals', props: {},
-            events: {},
-
-        }],
-        classCode:
-            `//write code for module here
-class main {
-    constructor({ getState, setState, mergeState, tiePS, getRef, getProps, getEvents, getExtras }) {
-        this.gs = getState
-        this.ss = setState
-        this.ms = mergeState
-        this.tiePS = tiePS
-        this.getRef = getRef
-        this.gp = getProps
-        this.gv = getEvents
-        this.gx = getExtras
-    }
-    //put code below :)
-
-
-}
-`
-    },
-    { name: 'Column', id: 'root', props: {} },
-]
-
 let wsRef = null
 
 const fetchApp = (disMes) => {
@@ -311,6 +281,6 @@ const importOldProjos = async () => {
 importOldProjos()
 
 const done = 'DONE'
-export { fetchApp, uploadApp, initApp, changeSync, shortCuts, done, newApp }
+export { fetchApp, uploadApp, initApp, changeSync, shortCuts, done }
 
 

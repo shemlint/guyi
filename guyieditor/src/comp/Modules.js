@@ -4,7 +4,7 @@ import { BiDuplicate } from 'react-icons/bi'
 import Popover from '@material-ui/core/Popover'
 import EnterInput from './util/EnterInput'
 import { dataBasic, dataHtml } from './Widgets'
-import { newApp } from './util/store'
+import { newApp } from './util/data'
 import TreeView from './util/TreeView'
 
 const dbasic = dataBasic.map(b => b.name)

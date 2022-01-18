@@ -27,7 +27,7 @@ import MLink from '@material-ui/core/Link'
 import MSelect from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
 
-import { getCodeClass } from './util/data'
+import { getCodeClass ,template} from './util/data'
 
 const drawComp = (tree, id, prev = false, slData = {}, dynamic = false) => {
     const inst = slData.inst
@@ -761,17 +761,7 @@ const updateApp = (tree) => {
         let funcs = tree[0].funcs
         let code =
             `//code auto imported but with errors
-class main {
-    constructor({ getState, setState, mergeState, tiePS, getRef, getProps, getEvents, getExtras }) {
-        this.gs = getState
-        this.ss = setState
-        this.ms = mergeState
-        this.tps = tiePS
-        this.gr = getRef
-        this.gp = getProps
-        this.gv = getEvents
-        this.gx = getExtras
-    }
+${template}
     //put code below :)
 
 `
