@@ -19,7 +19,7 @@ const Functions = ({ app, setApp }) => {
     const [test, setTest] = useState(get('lasttest'))
     const [minimap, setMinimap] = useState(get('mipmapopen'))
     const monaco = useMonaco()
-    const models=global.monacoModels
+    const models = global.monacoModels
     React.useEffect(() => {
         if (monaco) {
             // console.log(monaco,monaco.create())
@@ -84,17 +84,25 @@ const Functions = ({ app, setApp }) => {
             editorRef.current = editor
             if (!models[appName]) {
                 try {
-                    const names = monaco.editor.getModels().map(m => ({ path: m?._associatedResource?.path, model: m }))
-                    const paths = names.map(m => m.path)
+                    const modNames = monaco.editor.getModels().map(m => ({ path: m?._associatedResource?.path, model: m }))
+                    const paths = modNames.map(m => m.path)
                     const modPos = paths.indexOf(`/${appName}`)
+
                     if (modPos !== -1 && !models[appName]) {
-                        models[appName] = { model: names[modPos].model }
+                        if (Object.keys(models).length === 0) {
+                            modNames[modPos].model.dispose()
+                            const model = monaco.editor.createModel(app[0].classCode, 'javascript', new monaco.Uri().with({ path: appName }))
+                            models[appName] = { model }
+                            console.log('here')
+                        } else {
+                            models[appName] = { model: modNames[modPos].model }
+                        }
                     } else {
                         const model = monaco.editor.createModel(app[0].classCode, 'javascript', new monaco.Uri().with({ path: appName }))
                         models[appName] = { model }
                     }
                 } catch (e) {//TODO model exists
-                    //        console.log('model create', e)
+                    console.log('model create', e)
                 }
             }
             const { model, viewState } = models[appName]

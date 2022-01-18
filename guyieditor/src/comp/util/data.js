@@ -632,7 +632,7 @@ const getCodeClass = (code, prev = false, inst = {}) => {
             let props = []
             keys.forEach(k => {
                 if (typeof instance[k] === 'function') {
-                    if (!k.startsWith('_') && !['gp', 'gs', 'ss', 'tps', 'gr', 'gv', 'ms', 'gx', 'gf', 'tiePS', 'getRef', 'constructor'].includes(k)) {
+                    if (!k.startsWith('_') && !['gp','ge','tf', 'gs', 'ss', 'tps', 'gr', 'gv', 'ms', 'gx', 'gf', 'tiePS', 'getRef', 'constructor'].includes(k)) {
                         methods.push(k)
                     }
                 } else {
