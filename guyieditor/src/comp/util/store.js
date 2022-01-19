@@ -79,7 +79,8 @@ global.schema = {
     lasttest: { def: '' },
     mipmapopen: { def: true },
     restype: { def: 'media' },
-    lastcolors: { def: ['blue', 'red', 'green', 'purple', 'violet'] }
+    lastcolors: { def: ['blue', 'red', 'green', 'purple', 'violet'] },
+    lasticons:{def:[]},
 }
 const get = global.store.get
 const set = global.store.set

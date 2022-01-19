@@ -19,6 +19,14 @@ import { Preview } from './Resources'
 const get = global.store.get
 const set = global.store.set
 
+const recordAddedIcon = (name) => {
+    let icons = get('lasticons')
+    icons = icons.filter(i => i !== name)
+    icons.unshift(name)
+    icons = icons.slice(0, 10)
+    set('lasticons', icons)
+}
+
 const MSelectWrap = ({ options = [], value = '', onChange }) => {
     return (
         <Select value={value} onChange={(e) => onChange(e.target.value)}>
@@ -27,12 +35,12 @@ const MSelectWrap = ({ options = [], value = '', onChange }) => {
     )
 }
 
-const Pm = ({ style, children, width = '50%', ...others }) => <p style={{...style, overflow: 'hidden', margin: 0 }} {...others} >{children}</p>
+const Pm = ({ style, children, width = '50%', ...others }) => <p style={{ ...style, overflow: 'hidden', margin: 0 }} {...others} >{children}</p>
 
-const Row = ({ style, children, onLeave, onClick,onDrop,onDragOver }) => {
+const Row = ({ style, children, onLeave, onClick, onDrop, onDragOver }) => {
 
     return (
-        <div onMouseLeave={onLeave} onClick={onClick} style={{marginRight:7, ...style, display: 'flex', }}>{children}
+        <div onMouseLeave={onLeave} onClick={onClick} style={{ marginRight: 7, ...style, display: 'flex', }}>{children}
         </div>
     )
 }
@@ -89,7 +97,7 @@ export const Text = ({ name = '', value = '', onChange = () => { } }) => {
     return (
         <Row onDrop={dropped} onDragOver={(e) => e.preventDefault()} style={{ display: 'flex' }}>
             <Pm>{name}</Pm>
-            <EnterInput value={text} type='text' style={{ width: 100,flex:1 }} onBlur={() => onChange(text)}
+            <EnterInput value={text} type='text' style={{ flex: 1 ,marginLeft:3}} onBlur={() => onChange(text)}
                 onChange={(e) => setText(e.target.value)} onDragOver={(e) => e.preventDefault()}
                 onEnter={() => onChange(text)} />
         </Row>
@@ -101,7 +109,7 @@ export const NumberInput = ({ name = '', value = 0, onChange = () => { } }) => {
     return (
         <Row>
             <Pm>{name}</Pm>
-            <input type='text' value={value} style={{ width: 100 ,flex:1}}
+            <input type='text' value={value} style={{flex: 1,marginLeft:3 }}
                 //onBlur={() => onChange(text)}
                 onChange={(e) => {
                     let val = e.target.value;
@@ -281,6 +289,7 @@ export const Comps = ({ name = '', values = [], app, setApp, passChild = false, 
         if (data.startsWith('Md') || data.startsWith('Fa') || data.startsWith('Bi')) {
             child.name = 'Icon'
             child.extras = data
+            recordAddedIcon(data)
         }
         tmpChilds.splice(pos, 0, passChild ? `${app[0].name},${child.id}` : child.id);
         onChange(tmpChilds, child);
@@ -358,6 +367,7 @@ export const Comp = ({ name = '', values = [], app, setApp, passChild = false, o
         if (data.startsWith('Md') || data.startsWith('Fa') || data.startsWith('Bi')) {
             child.name = 'Icon'
             child.extras = data
+            recordAddedIcon(data)
         }
         let passId = passChild ? `${app[0].name},${child.id}` : child.id
 
@@ -607,7 +617,7 @@ const MapData = ({ name, value, onChange, types }) => {
 
 }
 
-const IdRow = ({ changeId, oid, app, type,extras }) => {
+const IdRow = ({ changeId, oid, app, type, extras }) => {
     const [id, setId] = useState(oid)
     const [info, setInfo] = useState('')
     const disMes = (mes) => {
@@ -635,7 +645,7 @@ const IdRow = ({ changeId, oid, app, type,extras }) => {
     return (
         <>
             <div style={{ display: 'flex', flexWrap: 'wrap', borderBottom: '1px solid blue' }} >
-                <div style={{ color: 'blue' }}>{`${extras||type}-${oid}`}</div>
+                <div style={{ color: 'blue' }}>{`${extras || type}-${oid}`}</div>
                 <EnterInput type='text' value={id} onChange={(e) => setId(e.target.value)}
                     style={{ width: '80%' }}
                     onEnter={save}
@@ -664,7 +674,7 @@ const Properties = ({
             return fields;
         }
         let origProps = localPropTypes[types.indexOf(type)].props
-        let props= origProps.concat([{name:'visibleWhen',prop:'visibleWhen',type:'text',value:''}])
+        let props = origProps.concat([{ name: 'visibleWhen', prop: 'visibleWhen', type: 'text', value: '' }])
         props.forEach(({ name, prop, type, value }, pos) => {
             if (type === 'event') return
             let comp = <Pm>Unkown</Pm>

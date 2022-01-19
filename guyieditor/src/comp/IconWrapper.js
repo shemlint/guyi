@@ -7,15 +7,14 @@ import EnterInput from './util/EnterInput'
 
 const micons = Object.keys(md)
 const ficons = Object.keys(fa)
-const bicons=Object.keys(bi)
+const bicons = Object.keys(bi)
+const icons = [...micons, ...ficons, ...bicons]
+
+const get = global.store.get
 
 const IconWrapper = () => {
     const [sch, setSch] = useState('icon')
-    let mresIcons = micons.filter(ic => ic.toLowerCase().includes(sch.toLowerCase()))
-    let fresIcons = ficons.filter(ic => ic.toLowerCase().includes(sch.toLowerCase()))
-    let bresIcons = bicons.filter(ic => ic.toLowerCase().includes(sch.toLowerCase()))
-    let allIcons = mresIcons.concat(fresIcons,bresIcons)  //mresIcons.concat(fresIcons)
-    
+    let resIcons = icons.filter(ic => ic.toLowerCase().includes(sch.toLowerCase()))
     const Search = () => {
         const [optSrc, setOptSrc] = useState(sch)
         return (
@@ -27,6 +26,10 @@ const IconWrapper = () => {
                 />
             </div>
         )
+    }
+    const LastTenIcons = () => {
+        const lasticons = get('lasticons')
+        return [<div>Recent</div>, ...lasticons.map(i => <Drag icon={i} />)]
     }
 
     const Drag = ({ icon }) => {
@@ -52,7 +55,7 @@ const IconWrapper = () => {
                 </Tooltip>
             )
 
-        }else if (icon.startsWith('Bi')) {
+        } else if (icon.startsWith('Bi')) {
             return (
                 <Tooltip title={icon} placement='bottom' >
                     <div draggable={true} onDragStart={(e) => e.dataTransfer.setData('text', icon)}
@@ -68,14 +71,14 @@ const IconWrapper = () => {
     }
 
     return (
-        <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap',alignItems:'flex-start' }}>
+        <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', alignItems: 'flex-start' }}>
             <Search />
-            {allIcons.map(ic => {
+            {resIcons.map(ic => {
                 return (
                     <Drag key={ic} icon={ic} />
                 )
             })}
-
+            <LastTenIcons />
         </div>
     )
 }
