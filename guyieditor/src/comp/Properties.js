@@ -27,12 +27,12 @@ const MSelectWrap = ({ options = [], value = '', onChange }) => {
     )
 }
 
-const Pm = ({ style, children, width = '50%', ...others }) => <p style={{ width, ...style, overflow: 'hidden', margin: 0 }} {...others} >{children}</p>
+const Pm = ({ style, children, width = '50%', ...others }) => <p style={{...style, overflow: 'hidden', margin: 0 }} {...others} >{children}</p>
 
-const Row = ({ style, children, onLeave, onClick }) => {
+const Row = ({ style, children, onLeave, onClick,onDrop,onDragOver }) => {
 
     return (
-        <div onMouseLeave={onLeave} onClick={onClick} style={{ ...style, display: 'flex' }}>{children}
+        <div onMouseLeave={onLeave} onClick={onClick} style={{marginRight:7, ...style, display: 'flex', }}>{children}
         </div>
     )
 }
@@ -87,12 +87,12 @@ export const Text = ({ name = '', value = '', onChange = () => { } }) => {
         }
     }
     return (
-        <div onDrop={dropped} onDragOver={(e) => e.preventDefault()} style={{ display: 'flex' }}>
+        <Row onDrop={dropped} onDragOver={(e) => e.preventDefault()} style={{ display: 'flex' }}>
             <Pm>{name}</Pm>
-            <EnterInput value={text} type='text' style={{ width: 100 }} onBlur={() => onChange(text)}
+            <EnterInput value={text} type='text' style={{ width: 100,flex:1 }} onBlur={() => onChange(text)}
                 onChange={(e) => setText(e.target.value)} onDragOver={(e) => e.preventDefault()}
                 onEnter={() => onChange(text)} />
-        </div>
+        </Row>
     )
 }
 export const NumberInput = ({ name = '', value = 0, onChange = () => { } }) => {
@@ -101,7 +101,7 @@ export const NumberInput = ({ name = '', value = 0, onChange = () => { } }) => {
     return (
         <Row>
             <Pm>{name}</Pm>
-            <input type='text' value={value} style={{ width: 100 }}
+            <input type='text' value={value} style={{ width: 100 ,flex:1}}
                 //onBlur={() => onChange(text)}
                 onChange={(e) => {
                     let val = e.target.value;

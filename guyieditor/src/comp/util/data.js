@@ -173,8 +173,8 @@ const propT = [
             { name: 'Step', prop: 'step', type: 'number', value: 1 },
             { name: 'Class', prop: 'className', type: 'text', value: '' },
             { name: 'DomId', prop: 'id', type: 'text', value: '' },
-            {name:'TrackValue',prop:'TrackValue',type:'bool',value:true},
-            
+            { name: 'TrackValue', prop: 'TrackValue', type: 'bool', value: true },
+
         ]
     },
     {//maplist
@@ -266,9 +266,9 @@ const propT = [
             { name: 'Size', prop: 'Size', type: 'select,small,medium,large' },
             { name: 'Disabled', prop: 'Disabled', type: 'bool', value: false },
             { name: 'Elevation', prop: 'Elevation', type: 'bool', value: false },
-            {name:'TextColor',prop:'TextColor',type:'color',value:''},
-            {name:"BackColor",prop:'BackColor',type:'color',value:''},
-            {name:'HoverBackColor',prop:'HoverBackColor',type:'color',value:''},
+            { name: 'TextColor', prop: 'TextColor', type: 'color', value: '' },
+            { name: "BackColor", prop: 'BackColor', type: 'color', value: '' },
+            { name: 'HoverBackColor', prop: 'HoverBackColor', type: 'color', value: '' },
         ]
     },
     {
@@ -286,11 +286,8 @@ const propT = [
             { name: 'Margin', prop: 'Margin', type: 'select,none,dense,normal' },
             { name: 'Disabled', prop: 'Disabled', type: 'bool', value: false },
             { name: 'Width', prop: 'Width', type: 'number', value: 0 },
-            {name:'TextColor',prop:'TextColor',type:'color',value:''},
-            {name:"BackColor",prop:'BackColor',type:'color',value:''},
-            {name:'HoverBackColor',prop:'HoverBackColor',type:'color',value:''},
-          {name:'TrackValue',prop:'TrackValue',type:'bool',value:true},
-            
+            { name: 'TrackValue', prop: 'TrackValue', type: 'bool', value: true },
+
         ]
     },
     {
@@ -424,7 +421,7 @@ const propT = [
             { name: 'Color', prop: 'Color', type: 'select,primary,secondary,default', value: 'standard' },
             { name: 'Name', prop: 'Name', type: 'text', value: '' },
             { name: 'Size', prop: 'Size', type: 'select,small,medium', value: 'normal' },
-            {name:'TrackValue',prop:'TrackValue',type:'bool',value:true},
+            { name: 'TrackValue', prop: 'TrackValue', type: 'bool', value: true },
         ]
     },
     {
@@ -438,8 +435,8 @@ const propT = [
             { name: 'Max', prop: 'Max', type: 'number', value: 0 },
             { name: 'Min', prop: 'Min', type: 'number', value: 0 },
             { name: 'labelOn', prop: 'LabelOn', type: 'select,on,auto,off', value: false },
-            {name:'TrackValue',prop:'TrackValue',type:'bool',value:true},
-            
+            { name: 'TrackValue', prop: 'TrackValue', type: 'bool', value: true },
+
         ]
     },
     {
@@ -460,8 +457,8 @@ const propT = [
             { name: 'Color', prop: 'Color', type: 'select,primary,secondary,default', value: 'default' },
             { name: 'Indeterminate', prop: 'Indeterminate', type: 'bool', value: false },
             { name: 'Size', prop: 'Size', type: 'selct,small,medium,large', value: 'medium' },
-            {name:'TrackValue',prop:'TrackValue',type:'bool',value:true},
-            
+            { name: 'TrackValue', prop: 'TrackValue', type: 'bool', value: true },
+
         ]
     },
     {
@@ -472,8 +469,8 @@ const propT = [
             { name: 'Color', prop: 'Color', type: 'select,primary,secondary,default', value: 'default' },
             { name: 'Indeterminate', prop: 'Indeterminate', type: 'bool', value: false },
             { name: 'Size', prop: 'Size', type: 'selct,small,medium,large', value: 'medium' },
-            {name:'TrackValue',prop:'TrackValue',type:'bool',value:true},
-            
+            { name: 'TrackValue', prop: 'TrackValue', type: 'bool', value: true },
+
         ]
     },
     {
@@ -499,8 +496,8 @@ const propT = [
         props: [
             { name: 'Values', prop: 'Values', type: 'text', value: '' },
             { name: 'Value', prop: 'Value', type: 'text', value: '' },
-            {name:'TrackValue',prop:'TrackValue',type:'bool',value:true},
-            
+            { name: 'TrackValue', prop: 'TrackValue', type: 'bool', value: true },
+
         ]
     }
 ]
@@ -636,7 +633,7 @@ const getCodeClass = (code, prev = false, inst = {}) => {
             gs: props.getState, tps: tiePS, gr: getRef, tf: toFile, ms: mergeState, gf: getFile, ss: props.setState,
             gp: props.getProps, ge: props.getEvents, gx: props.getExtras
         }
-        props=Object.assign(props,renamed)
+        props = Object.assign(props, renamed)
         let instance = new c(props)
         if (typeof instance === 'object') {
             let keys = Object.getOwnPropertyNames(instance).concat(Object.getOwnPropertyNames(instance.__proto__))
@@ -644,7 +641,7 @@ const getCodeClass = (code, prev = false, inst = {}) => {
             let props = []
             keys.forEach(k => {
                 if (typeof instance[k] === 'function') {
-                    if (!k.startsWith('_') && !['gp','ge','tf', 'gs', 'ss', 'tps', 'gr', 'gv', 'ms', 'gx', 'gf', 'tiePS', 'getRef', 'constructor'].includes(k)) {
+                    if (!k.startsWith('_') && !['gp', 'ge', 'tf', 'gs', 'ss', 'tps', 'gr', 'gv', 'ms', 'gx', 'gf', 'tiePS', 'getRef', 'constructor'].includes(k)) {
                         methods.push(k)
                     }
                 } else {
@@ -662,7 +659,7 @@ const getCodeClass = (code, prev = false, inst = {}) => {
     return { instance: {}, keys: [], methods: [], props: [] }
 }
 
-const template=`
+const template = `
 class main {
     constructor({ gs, ss, gr, tps, tf, ms, gf, gp, ge, gx }) {
         const magicFuncs = { gs, ss, gr, tps, tf, ms, gf, ss, gp, ge, gx }
@@ -676,7 +673,7 @@ const newApp = [
             events: {},
 
         }],
-        classCode:`//write code for module here
+        classCode: `//write code for module here
     ${template}
     //put code below :)
     
@@ -689,5 +686,5 @@ const newApp = [
 ]
 
 
-export { propT, eventT, getCodeClass ,template,newApp}
+export { propT, eventT, getCodeClass, template, newApp }
 

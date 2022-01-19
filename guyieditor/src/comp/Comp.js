@@ -508,17 +508,8 @@ const drawComp = (tree, id, prev = false, slData = {}, dynamic = false) => {
         )
     }
     if (node.name === 'MTextField') {
-        const CMTextField=withStyles((theme)=>({
-            root:{
-                color:props.TextColor,
-                backgroundColor:props.BackColor,
-                '&:hover':{
-                    backgroundColor:props.HoverBackColor,
-                }
-            }
-        }))(MTextField)
         comp = React.createElement(
-            CMTextField, {
+            MTextField, {
             key: id,
             variant: props.Variant || 'standard',
             label: props.Label,
