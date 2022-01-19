@@ -19,7 +19,7 @@ const propT = [
             { name: 'Flex', prop: 'flex', type: 'number', value: 0 },
             { name: 'Overflow', prop: 'overflow', type: 'select,visible,hidden,auto,scroll' },
             { name: 'Cursor', prop: 'cursor', type: 'select,copy,crosshair,grab,help,move,no-drop,none,not-allowed,pointer,progress,revert,row-resize,text,unset,wait,zoom-in,zoom-out', value: 'select' },
-           { name: 'Class', prop: 'className', type: 'text', value: '' },
+            { name: 'Class', prop: 'className', type: 'text', value: '' },
             { name: 'DomId', prop: 'id', type: 'text', value: '' },
             { name: 'Position', prop: 'position', type: 'select,static,absolute,fixed,relative,sticky,initial,inherit', value: '' },
             { name: 'Ripples', prop: 'rdisabled', type: 'bool', value: false },
@@ -173,6 +173,7 @@ const propT = [
             { name: 'Step', prop: 'step', type: 'number', value: 1 },
             { name: 'Class', prop: 'className', type: 'text', value: '' },
             { name: 'DomId', prop: 'id', type: 'text', value: '' },
+            { name: 'TrackValue', prop: 'TrackValue', type: 'bool', value: true },
 
         ]
     },
@@ -265,6 +266,9 @@ const propT = [
             { name: 'Size', prop: 'Size', type: 'select,small,medium,large' },
             { name: 'Disabled', prop: 'Disabled', type: 'bool', value: false },
             { name: 'Elevation', prop: 'Elevation', type: 'bool', value: false },
+            { name: 'TextColor', prop: 'TextColor', type: 'color', value: '' },
+            { name: "BackColor", prop: 'BackColor', type: 'color', value: '' },
+            { name: 'HoverBackColor', prop: 'HoverBackColor', type: 'color', value: '' },
         ]
     },
     {
@@ -274,7 +278,7 @@ const propT = [
             { name: 'Label', prop: 'Label', type: 'text', value: '' },
             { name: 'Color', prop: 'Color', type: 'select,primary,secondary,stardard', value: '' },
             { name: 'Size', prop: 'Size', type: 'select,small,medium,large', value: 'medium' },
-            { name: 'Type', prop: 'Type', type: 'select,text,number,checkbox,radio,label', value: 'text' },
+            { name: 'Type', prop: 'Type', value: 'text', type: "select,button,checkbox,color,date,datetime-local,email,file,hidden,image,month,number,password,radio,range,reset,search,submit,tel,text,time,url" },
             { name: 'Variant', prop: 'Variant', type: 'select,default,filled,outlined', value: 'standard' },
             { name: 'Error', prop: 'Error', type: 'bool', value: false },
             { name: 'HelperText', prop: 'HelperText', type: 'text', value: '' },
@@ -282,6 +286,7 @@ const propT = [
             { name: 'Margin', prop: 'Margin', type: 'select,none,dense,normal' },
             { name: 'Disabled', prop: 'Disabled', type: 'bool', value: false },
             { name: 'Width', prop: 'Width', type: 'number', value: 0 },
+            { name: 'TrackValue', prop: 'TrackValue', type: 'bool', value: true },
 
         ]
     },
@@ -416,6 +421,7 @@ const propT = [
             { name: 'Color', prop: 'Color', type: 'select,primary,secondary,default', value: 'standard' },
             { name: 'Name', prop: 'Name', type: 'text', value: '' },
             { name: 'Size', prop: 'Size', type: 'select,small,medium', value: 'normal' },
+            { name: 'TrackValue', prop: 'TrackValue', type: 'bool', value: true },
         ]
     },
     {
@@ -429,6 +435,7 @@ const propT = [
             { name: 'Max', prop: 'Max', type: 'number', value: 0 },
             { name: 'Min', prop: 'Min', type: 'number', value: 0 },
             { name: 'labelOn', prop: 'LabelOn', type: 'select,on,auto,off', value: false },
+            { name: 'TrackValue', prop: 'TrackValue', type: 'bool', value: true },
 
         ]
     },
@@ -450,6 +457,7 @@ const propT = [
             { name: 'Color', prop: 'Color', type: 'select,primary,secondary,default', value: 'default' },
             { name: 'Indeterminate', prop: 'Indeterminate', type: 'bool', value: false },
             { name: 'Size', prop: 'Size', type: 'selct,small,medium,large', value: 'medium' },
+            { name: 'TrackValue', prop: 'TrackValue', type: 'bool', value: true },
 
         ]
     },
@@ -461,6 +469,7 @@ const propT = [
             { name: 'Color', prop: 'Color', type: 'select,primary,secondary,default', value: 'default' },
             { name: 'Indeterminate', prop: 'Indeterminate', type: 'bool', value: false },
             { name: 'Size', prop: 'Size', type: 'selct,small,medium,large', value: 'medium' },
+            { name: 'TrackValue', prop: 'TrackValue', type: 'bool', value: true },
 
         ]
     },
@@ -487,6 +496,7 @@ const propT = [
         props: [
             { name: 'Values', prop: 'Values', type: 'text', value: '' },
             { name: 'Value', prop: 'Value', type: 'text', value: '' },
+            { name: 'TrackValue', prop: 'TrackValue', type: 'bool', value: true },
 
         ]
     }
@@ -501,7 +511,6 @@ const eventT = [
     { name: 'TextInput', events: [{ name: 'onChange', args: 'e', }, { name: 'onClick', args: 'e', }] },
     { name: 'Icon', events: [{ name: 'onClick', args: 'e' }] },
     { name: 'Ripples', events: [{ name: 'onClick', args: 'e' }] },
-    { name: 'TextInput', events: [{ name: 'onChange', args: 'e' }, { name: 'value', args: '' }] },
     { name: 'Html', events: [{ name: 'onClick', args: 'e' }] },
     { name: 'MButton', events: [{ name: 'onClick', args: 'e' }] },
     { name: 'MTextField', events: [{ name: 'onChange', args: 'e' }] },
@@ -613,20 +622,28 @@ const getCodeClass = (code, prev = false, inst = {}) => {
         `
         //eslint-disable-next-line
         let c = Function(body)()
-        let instance = new c({
+        let props = {
             getState: () => inst.state, tiePS, getRef, toFile, mergeState,
             getFile, reactClass: inst, setState: (s) => inst.setState(s),
             getProps: () => inst.props.tree[0].props,
             getEvents: () => inst.events,
             getExtras: () => inst.parentData,
-        })
+        }
+        let renamed = {
+            gs: props.getState, tps: tiePS, gr: getRef, tf: toFile, ms: mergeState, gf: getFile, ss: props.setState,
+            gp: props.getProps, ge: props.getEvents, gx: props.getExtras
+        }
+        props = Object.assign(props, renamed)
+        let instance = new c(props)
         if (typeof instance === 'object') {
             let keys = Object.getOwnPropertyNames(instance).concat(Object.getOwnPropertyNames(instance.__proto__))
             let methods = []
             let props = []
             keys.forEach(k => {
                 if (typeof instance[k] === 'function') {
-                    methods.push(k)
+                    if (!k.startsWith('_') && !['gp', 'ge', 'tf', 'gs', 'ss', 'tps', 'gr', 'gv', 'ms', 'gx', 'gf', 'tiePS', 'getRef', 'constructor'].includes(k)) {
+                        methods.push(k)
+                    }
                 } else {
                     props.push(k)
                 }
@@ -642,5 +659,32 @@ const getCodeClass = (code, prev = false, inst = {}) => {
     return { instance: {}, keys: [], methods: [], props: [] }
 }
 
-export { propT, eventT, getCodeClass }
+const template = `
+class main {
+    constructor({ gs, ss, gr, tps, tf, ms, gf, gp, ge, gx }) {
+        const magicFuncs = { gs, ss, gr, tps, tf, ms, gf, ss, gp, ge, gx }
+        Object.assign(this, magicFuncs)
+    }
+`
+const newApp = [
+    {
+        name: 'Main', state: {}, locals: {}, propTypes: [], funcs: [{
+            name: 'globals', props: {},
+            events: {},
+
+        }],
+        classCode: `//write code for module here
+    ${template}
+    //put code below :)
+    
+
+
+}
+`
+    },
+    { name: 'Column', id: 'root', props: {} },
+]
+
+
+export { propT, eventT, getCodeClass, template, newApp }
 

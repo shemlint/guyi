@@ -4,7 +4,7 @@ import { BiDuplicate } from 'react-icons/bi'
 import Popover from '@material-ui/core/Popover'
 import EnterInput from './util/EnterInput'
 import { dataBasic, dataHtml } from './Widgets'
-import { newApp } from './util/store'
+import { newApp } from './util/data'
 import TreeView from './util/TreeView'
 
 const dbasic = dataBasic.map(b => b.name)
@@ -158,8 +158,11 @@ const Modules = ({ app = [], changeApp, setApp }) => {
                                         c.props[p][i] = `${name},${parts[1]}`
                                     }
                                 }
-
                             })
+                        } else if (c.name === 'MapList' && p === 'Template' && typeof c.props[p] === 'string') {
+                            if (c.props[p] === oldName) {
+                                c.props[p] = name
+                            }
                         }
                     }
                 }
@@ -242,7 +245,7 @@ const Modules = ({ app = [], changeApp, setApp }) => {
     const setModuleOrderGlobally = () => {
         let otherNames = global.modules.map(m => m[0].name).filter(m => !names.includes(m))
         let allNames = names.concat(otherNames).slice(1)
-         global.modulesOrder = allNames
+        global.modulesOrder = allNames
     }
     setModuleOrderGlobally()
     const pinHanging = () => {

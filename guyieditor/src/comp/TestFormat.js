@@ -5,12 +5,12 @@ import { Scrollbars } from 'react-custom-scrollbars'
 import { Console, Hook, Unhook } from 'console-feed'
 import LocalForage from 'localforage'
 
-import * as THREE from 'three/build/three.module'
+import * as THREE from 'three'
 import htm from 'htm'
 
 import { propT, eventT } from './util/data'
-import { fetchApp, initApp, shortCuts, changeSync, newApp } from './util/store'
-
+import { fetchApp, initApp, shortCuts, changeSync } from './util/store'
+import {newApp} from './util/data'
 import Tab from './util/Tab'
 import Comp from './Comp'
 import Properties from './Properties'
@@ -56,6 +56,7 @@ global.rootUrl = 'http://shemlint.orgfree.com/'
 global.x = {}
 global.process = { platform: 'web' }
 global.user = {}
+global.monacoModels={}
 
 const set = global.store.set
 const get = global.store.get
@@ -216,10 +217,10 @@ const TestFormat = () => {
         global.remodules = data.remodules || []
         global.files = data.files || []
         global.appData = {}
+        global.monacoModels={}
         disMes('opened')
         runScripts()
-
-        setApp(global.modules[0])
+         setApp(global.modules[0])
         // setView(global.modules[0][1])
         setStartId()
         try {
@@ -244,7 +245,7 @@ const TestFormat = () => {
         setLayout(newLay)
     }
     const moduleChange = (dir) => {
-        let names = global.modulesOrder||[]
+        let names = global.modulesOrder || []
         const pos = names.indexOf(app[0].name)
         let newPos = 0
         if (pos === -1) return
@@ -261,9 +262,9 @@ const TestFormat = () => {
                 newPos = pos + 1
             }
         }
-        const mNames=global.modules.map(m=>m[0].name)
-        const appPos=mNames.indexOf(names[newPos])
-        if(appPos!==-1)changeApp(appPos)
+        const mNames = global.modules.map(m => m[0].name)
+        const appPos = mNames.indexOf(names[newPos])
+        if (appPos !== -1) changeApp(appPos)
     }
     const shortCutsWrap = (e) => shortCuts(
         e,
@@ -385,12 +386,8 @@ const TestFormat = () => {
                             setPos={setTabPos}
                             noScroll={[1]}
                             data={[
-                                {
-                                    title: 'Design', comp: <Screen ><Comp tree={mutApp} id={app[1].id} state={appState} setState={setAppState} /></Screen>
-                                },
-                                {
-                                    title: 'Code', comp: <Functions app={app} setApp={setApp} />
-                                },
+                                { title: 'Design', comp: <Screen ><Comp key={app[0].name} tree={mutApp} id={app[1].id} view={view} /></Screen> },
+                                { title: 'Code', comp: <Functions key={app[0].name} app={app} setApp={setApp} /> },
                                 { title: 'Exports', comp: <Exports app={app} setApp={setApp} /> },
                                 { title: 'Resources', comp: <Resources /> },
                                 { title: 'Modules', comp: <ExModules app={app} setApp={setApp} /> },
@@ -435,12 +432,8 @@ const TestFormat = () => {
                     setPos={setTabPos}
                     noScroll={[1]}
                     data={[
-                        {
-                            title: 'Design', comp: <Screen ><Comp tree={mutApp} id={app[1].id} state={appState} setState={setAppState} view={view} /></Screen>
-                        },
-                        {
-                            title: 'Code', comp: <Functions app={app} setApp={setApp} />
-                        },
+                        { title: 'Design', comp: <Screen ><Comp key={app[0].name} tree={mutApp} id={app[1].id} view={view} /></Screen> },
+                        { title: 'Code', comp: <Functions key={app[0].name} app={app} setApp={setApp} /> },
                         { title: 'Exports', comp: <Exports app={app} setApp={setApp} /> },
                         { title: 'Resources', comp: <Resources /> },
                         { title: 'Modules', comp: <ExModules app={app} setApp={setApp} /> },

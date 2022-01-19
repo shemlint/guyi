@@ -29,7 +29,7 @@ const Reload = ({ setReload }) => {
 
 }
 let lastOpened = ''
-const AppSelect = ({ setShowApp, startApp, openLoad ,setShowChange}) => {
+const AppSelect = ({ setShowApp, startApp, openLoad, setShowChange }) => {
   const [loaded, setLoaded] = useState(false)
   const [apps, setApps] = useState([])
 
@@ -148,11 +148,11 @@ const AppSelect = ({ setShowApp, startApp, openLoad ,setShowChange}) => {
         Saved Guyi Apps
       </div>
       <div style={{ position: 'absolute', top: 5, right: 5 }}>
-        <button onClick={() => store.set('showapp',false,openLoad)} >Dev.</button>
-        <button onClick={() => {setShowApp(false);setShowChange(false)}} >Close</button>
+        <button onClick={() => store.set('showapp', false, openLoad)} >Dev.</button>
+        <button onClick={() => { setShowApp(false); setShowChange(false) }} >Close</button>
       </div>
       {!loaded && loading}
-      {loaded && apps.length === 0 && <h1 style={{color:'blue'}} >NO APPS YET</h1>}
+      {loaded && apps.length === 0 && <h1 style={{ color: 'blue' }} >NO APPS YET</h1>}
       {apps.map((app, i) => <App app={app} index={i} />)}
     </div>
   )
@@ -263,15 +263,15 @@ const store = {
   get(key) {
     let res = localStorage.getItem(key)
     if (key === 'showapp') {
-      try{
-        res=JSON.parse(res)
-      }catch{}
-       if (typeof res !== 'boolean') {
+      try {
+        res = JSON.parse(res)
+      } catch { }
+      if (typeof res !== 'boolean') {
         return false
       } else {
         return res
       }
-     
+
     }
     return res
   }
@@ -513,19 +513,19 @@ const App = () => {
       let pos = {}; pos[buttonPosition] = 0;
       return (
         <div style={{
-          display: 'flex', justifyContent: 'flex-end', position: 'absolute', bottom: 0,
-          zIndex: '1000000000', ...pos
+          display: 'flex', justifyContent: 'flex-end', position: 'absolute', bottom: 5,
+          right: 5, zIndex: '1000000000', ...pos
         }} >
           <button onClick={() => setReload(true)}
-            style={{ fontSize: 12, opacity: 0.4, fontWeight: 'bolder', border: '2px solid red' }} >Reload</button>
+            style={{ fontSize: 16, opacity: 0.4, fontWeight: 'bolder', border: '2px solid red' }} >Reload</button>
           <button onClick={() => {
-           if (store.get('showapp')) {
+            if (store.get('showapp')) {
               setShowApp(true)
             } else {
               setShowChange(!showChange)
             }
           }}
-            style={{ fontSize: 12, opacity: 0.4, fontWeight: 'bolder', border: '2px solid red' }} >Open</button>
+            style={{ fontSize: 16, opacity: 0.4, fontWeight: 'bolder', border: '2px solid red' }} >Open</button>
         </div>
       )
     }
@@ -542,7 +542,7 @@ const App = () => {
             {wsRef ? 'Disconnect' : 'Connect'}
           </button>
           <div style={{ display: 'flex', flexWrap: 'wrap', width: '100%', justifyContent: 'space-around' }}>
-            <button onClick={() => {store.set('showapp',true,setShowApp)}} >Apps</button>
+            <button onClick={() => { store.set('showapp', true, setShowApp) }} >Apps</button>
             <button onClick={fetchApp}>Fetch app</button>
             <button onClick={() => setReload(true)}>Reload</button>
             <button onClick={() => setShowChange(false)}>Close</button>
