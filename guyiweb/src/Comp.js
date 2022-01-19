@@ -26,12 +26,14 @@ import MFormCL from '@material-ui/core/FormControlLabel'
 import MLink from '@material-ui/core/Link'
 import MSelect from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
+import {withStyles} from '@material-ui/core/styles'
 
-import { getCodeClass } from './data'
+import { getCodeClass, template } from './data'
+
 
 
 const drawComp = (tree, id, prev = false, slData = {}, dynamic = false) => {
-    const inst = slData.inst
+
     let dynamicCount = slData.dynamicCount
 
     let comp = <p>unknown</p>
@@ -48,13 +50,61 @@ const drawComp = (tree, id, prev = false, slData = {}, dynamic = false) => {
     } else {
         node = tree[pos]
     }
-
-    //resolve resource urls
     if (node.props === undefined) node.props = {}
     if (node.events === undefined) node.events = {}
     const props = node.props
     const events = node.events
+    const inst = slData.inst
 
+    const isVisible = () => {
+        try {
+            if (typeof props.visibleWhen === 'string' && props.visibleWhen.trim().length > 0) {
+                //eslint-disable-next-line
+                const annoy = Function('main,state', `return ${props.visibleWhen}`)
+                return annoy(slData.class, inst.state)
+            } else {
+                return true
+            }
+        } catch (e) {
+            console.log(`visibleWhen error ${node.id} ${e.message}`)
+            return true
+        }
+    }
+    if (!isVisible()) {
+        return false
+    }
+    let autoEvent =undefined
+    const tieValue = () => {
+        try {
+            const onChange = (e, s,) => {
+                const isSlider = (node.name === 'MSlider')
+                inst.setState({ [node.id]: isSlider ? s : e.target.value})
+            }
+            const onChangeBool = (e, v) => {
+                inst.setState({ [node.id]: v })
+            }
+            if (props.TrackValue !== undefined ? props.TrackValue : true) {
+                if (['TextInput', 'MTextField', 'MSelect', 'MSlider'].includes(node.name)) {
+                    const prop = (node.name === 'TextInput') ? 'value' : 'Value'
+                    if (inst.state[node.id] !== undefined)props[prop] = inst.state[node.id]
+                    else props[prop] = props[prop] || ''
+                    autoEvent = onChange
+                } else if (['MSwitch', 'MCheckbox', 'MRadio'].includes(node.name)) {
+                    const prop = 'Value'
+                    if (inst.state[node.id] !== undefined) props.Value = inst.state[node.id]
+                    else props[prop] = props[prop] || false
+                    autoEvent = onChangeBool
+                }
+                else {
+                    //   console.log(`tievalue not supported on ${node.name}`)
+                }
+            }
+        } catch (e) {
+            console.log(`TrackValue error ${node.id} ${e.message}`)
+            return true
+        }
+    }
+    tieValue()
     let resources = {}
     global.files.forEach(f => {
         resources[f.name] = f.url
@@ -69,7 +119,6 @@ const drawComp = (tree, id, prev = false, slData = {}, dynamic = false) => {
         return ref
     }
     const getEvent = (type) => {
-        //try {
         const m = events[type] ? events[type].method : ''
         const args = (events[type] && events[type].args) ? events[type].args : ''
         const userArgs = args === '' ? [] : args.split(',')
@@ -77,19 +126,20 @@ const drawComp = (tree, id, prev = false, slData = {}, dynamic = false) => {
         if (typeof p === 'function') {
             //let userArgs=events
             return (...args) => {
-                try { return slData.class[m](...userArgs, ...args) }
+                try {
+                    if (autoEvent) autoEvent(...args)
+                    return slData.class[m](...userArgs, ...args)
+                }
                 catch (e) { console.warn(`Method ${type}[${m}] error ${e.message}`, e) }
             }
         } else {
-            return undefined
+            return autoEvent 
         }
-        // } catch (e) {
-        //     console.log(e)
-        // }
     }
     const drawChilds = (name) => {
         let childs = node.props[name]
         let data = []
+
         if (Array.isArray(childs) && childs.length > 0) {
             childs.forEach(c => {
                 let child = <p>NO TREE</p>
@@ -295,8 +345,8 @@ const drawComp = (tree, id, prev = false, slData = {}, dynamic = false) => {
         data.forEach(d => {
             try {
                 //eslint-disable-next-line
-                let anony = new Function('main', `return ${d[0]}`)
-                if (anony(slData.class)) {
+                let anony = new Function('main,state', `return ${d[0]}`)
+                if (anony(slData.class, inst.state)) {
                     let pos = tree.map(c => c.id).indexOf(d[1])
                     if (pos !== -1) {
                         tree[pos].props.Extras = Extras
@@ -384,6 +434,10 @@ const drawComp = (tree, id, prev = false, slData = {}, dynamic = false) => {
     //#endregion 
 
     //render remodules
+    const setModuleRef = (ref) => {
+        inst.usedRefs[id] = { current: ref }
+    }
+
     if (!prev) {
         let names = global.modules.map(m => m[0].name);
         let renames = global.remodules.map(m => m[0].name);
@@ -394,7 +448,7 @@ const drawComp = (tree, id, prev = false, slData = {}, dynamic = false) => {
             tree[0].props = node.props
             tree[0].props.extras = slData.parentData
             tree[0].events = node.events
-            comp = <Comp key={id} tree={tree} id={tree[1].id} prev={prev} />
+            comp = <Comp setRef={setModuleRef} key={id} tree={tree} id={tree[1].id} prev={prev} />
 
         } else if (renames.includes(node.name)) {
             let pos = renames.indexOf(node.name)
@@ -402,7 +456,7 @@ const drawComp = (tree, id, prev = false, slData = {}, dynamic = false) => {
             tree[0].props = node.props
             tree[0].props.extras = slData.parentData
             tree[0].events = node.events
-            comp = <Comp key={id} tree={tree} id={tree[1].id} prev={prev} />
+            comp = <Comp setRef={setModuleRef} key={id} tree={tree} id={tree[1].id} prev={prev} />
 
         }
     } else {
@@ -414,7 +468,7 @@ const drawComp = (tree, id, prev = false, slData = {}, dynamic = false) => {
                 tree[0].props = node.props
                 tree[0].props.parentData = slData.parentData
                 tree[0].events = node.events
-                comp = <Comp key={id} tree={tree} id={tree[1].id} prev={prev} />
+                comp = <Comp setRef={setModuleRef} key={id} tree={tree} id={tree[1].id} prev={prev} />
             }
         }
     }
@@ -431,8 +485,17 @@ const drawComp = (tree, id, prev = false, slData = {}, dynamic = false) => {
     }
     //#region material ui
     if (node.name === 'MButton') {
+        const CMButton=withStyles((theme)=>({
+            root:{
+                color:props.TextColor,
+                backgroundColor:props.BackColor,
+                '&:hover':{
+                    backgroundColor:props.HoverBackColor,
+                }
+            }
+        }))(MButton)
         comp = React.createElement(
-            MButton, {
+            CMButton, {
             key: id,
             color: props.Color || 'primary',
             variant: props.Variant || 'contained',
@@ -643,7 +706,7 @@ const drawComp = (tree, id, prev = false, slData = {}, dynamic = false) => {
             color: props.Color,
             name: props.Name,
             size: props.Size,
-
+            onChange: getEvent('onChange')
         }
         )
     }
@@ -696,7 +759,7 @@ const drawComp = (tree, id, prev = false, slData = {}, dynamic = false) => {
         )
     }
 
-    if (node.name === 'MRadio') {
+    if (node.name === 'MRadio') {//onChange not working
         comp = React.createElement(
             MRadio, {
             key: id,
@@ -705,7 +768,13 @@ const drawComp = (tree, id, prev = false, slData = {}, dynamic = false) => {
             color: props.Color,
             indeterminate: props.Indeterminate,
             size: props.Size,
-            onChange: getEvent('onChange'),
+            onClick: (e) => {
+                const ev = getEvent('onChange')
+                if (typeof ev === 'function') {
+                    ev(e, !props.Value)
+                }
+            },
+            //onChange: getEvent('onChange'),
 
         }
         )
@@ -758,17 +827,7 @@ const updateApp = (tree) => {
         let funcs = tree[0].funcs
         let code =
             `//code auto imported but with errors
-class main {
-    constructor({ getState, setState, mergeState, tiePS, getRef, getProps, getEvents, getExtras }) {
-        this.gs = getState
-        this.ss = setState
-        this.ms = mergeState
-        this.tiePS = tiePS
-        this.getRef = getRef
-        this.gp = getProps
-        this.gv = getEvents
-        this.gx = getExtras
-    }
+${template}
     //put code below :)
 
 `
@@ -888,6 +947,9 @@ class Comp extends React.Component {
     render() {
         let { tree, id, prev } = this.props
         this.guyiUpdate()
+        if (typeof this.props.setRef === 'function') {
+            this.props.setRef(this.classInst)
+        }
         return drawComp(tree, id, prev,
             {
                 usedRefs: this.usedRefs, dynamicCount: this.dynamicCount, parentData: this.getParentData(),
