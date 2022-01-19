@@ -663,7 +663,8 @@ const Properties = ({
             fields.push(<Pm>No props</Pm>)
             return fields;
         }
-        let props = localPropTypes[types.indexOf(type)].props
+        let origProps = localPropTypes[types.indexOf(type)].props
+        let props= origProps.concat([{name:'visibleWhen',prop:'visibleWhen',type:'text',value:''}])
         props.forEach(({ name, prop, type, value }, pos) => {
             if (type === 'event') return
             let comp = <Pm>Unkown</Pm>

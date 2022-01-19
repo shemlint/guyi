@@ -13,5 +13,12 @@ echo "copying build to guyi desktop runners"
 cp ./build1/guyi.html ../guyidesk/guyi.html
 echo "copying build to guyi phone runners"
 cp ./build1/guyi.html ../guyiphone/guyiandroid/app/src/main/assets/guyi.html
+cp ./build1/guyi.html /media/teddy/DATA/PROJECTS/AndroidProjs/GuyiAndroid/app/src/main/assets
 
-echo "Completed successfully"
+echo "building android "
+
+# cd /media/teddy/DATA/PROJECTS/AndroidProjs/GuyiAndroid
+# ./gradlew assembleDebug
+
+echo "Completed successfully "
+

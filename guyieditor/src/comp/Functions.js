@@ -93,7 +93,6 @@ const Functions = ({ app, setApp }) => {
                             modNames[modPos].model.dispose()
                             const model = monaco.editor.createModel(app[0].classCode, 'javascript', new monaco.Uri().with({ path: appName }))
                             models[appName] = { model }
-                            console.log('here')
                         } else {
                             models[appName] = { model: modNames[modPos].model }
                         }

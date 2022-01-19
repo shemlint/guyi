@@ -173,7 +173,8 @@ const propT = [
             { name: 'Step', prop: 'step', type: 'number', value: 1 },
             { name: 'Class', prop: 'className', type: 'text', value: '' },
             { name: 'DomId', prop: 'id', type: 'text', value: '' },
-
+            {name:'TrackValue',prop:'TrackValue',type:'bool',value:true},
+            
         ]
     },
     {//maplist
@@ -265,6 +266,9 @@ const propT = [
             { name: 'Size', prop: 'Size', type: 'select,small,medium,large' },
             { name: 'Disabled', prop: 'Disabled', type: 'bool', value: false },
             { name: 'Elevation', prop: 'Elevation', type: 'bool', value: false },
+            {name:'TextColor',prop:'TextColor',type:'color',value:''},
+            {name:"BackColor",prop:'BackColor',type:'color',value:''},
+            {name:'HoverBackColor',prop:'HoverBackColor',type:'color',value:''},
         ]
     },
     {
@@ -282,7 +286,11 @@ const propT = [
             { name: 'Margin', prop: 'Margin', type: 'select,none,dense,normal' },
             { name: 'Disabled', prop: 'Disabled', type: 'bool', value: false },
             { name: 'Width', prop: 'Width', type: 'number', value: 0 },
-
+            {name:'TextColor',prop:'TextColor',type:'color',value:''},
+            {name:"BackColor",prop:'BackColor',type:'color',value:''},
+            {name:'HoverBackColor',prop:'HoverBackColor',type:'color',value:''},
+          {name:'TrackValue',prop:'TrackValue',type:'bool',value:true},
+            
         ]
     },
     {
@@ -416,6 +424,7 @@ const propT = [
             { name: 'Color', prop: 'Color', type: 'select,primary,secondary,default', value: 'standard' },
             { name: 'Name', prop: 'Name', type: 'text', value: '' },
             { name: 'Size', prop: 'Size', type: 'select,small,medium', value: 'normal' },
+            {name:'TrackValue',prop:'TrackValue',type:'bool',value:true},
         ]
     },
     {
@@ -429,7 +438,8 @@ const propT = [
             { name: 'Max', prop: 'Max', type: 'number', value: 0 },
             { name: 'Min', prop: 'Min', type: 'number', value: 0 },
             { name: 'labelOn', prop: 'LabelOn', type: 'select,on,auto,off', value: false },
-
+            {name:'TrackValue',prop:'TrackValue',type:'bool',value:true},
+            
         ]
     },
     {
@@ -450,7 +460,8 @@ const propT = [
             { name: 'Color', prop: 'Color', type: 'select,primary,secondary,default', value: 'default' },
             { name: 'Indeterminate', prop: 'Indeterminate', type: 'bool', value: false },
             { name: 'Size', prop: 'Size', type: 'selct,small,medium,large', value: 'medium' },
-
+            {name:'TrackValue',prop:'TrackValue',type:'bool',value:true},
+            
         ]
     },
     {
@@ -461,7 +472,8 @@ const propT = [
             { name: 'Color', prop: 'Color', type: 'select,primary,secondary,default', value: 'default' },
             { name: 'Indeterminate', prop: 'Indeterminate', type: 'bool', value: false },
             { name: 'Size', prop: 'Size', type: 'selct,small,medium,large', value: 'medium' },
-
+            {name:'TrackValue',prop:'TrackValue',type:'bool',value:true},
+            
         ]
     },
     {
@@ -487,7 +499,8 @@ const propT = [
         props: [
             { name: 'Values', prop: 'Values', type: 'text', value: '' },
             { name: 'Value', prop: 'Value', type: 'text', value: '' },
-
+            {name:'TrackValue',prop:'TrackValue',type:'bool',value:true},
+            
         ]
     }
 ]
@@ -501,7 +514,6 @@ const eventT = [
     { name: 'TextInput', events: [{ name: 'onChange', args: 'e', }, { name: 'onClick', args: 'e', }] },
     { name: 'Icon', events: [{ name: 'onClick', args: 'e' }] },
     { name: 'Ripples', events: [{ name: 'onClick', args: 'e' }] },
-    { name: 'TextInput', events: [{ name: 'onChange', args: 'e' }, { name: 'value', args: '' }] },
     { name: 'Html', events: [{ name: 'onClick', args: 'e' }] },
     { name: 'MButton', events: [{ name: 'onClick', args: 'e' }] },
     { name: 'MTextField', events: [{ name: 'onChange', args: 'e' }] },
