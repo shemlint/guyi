@@ -77,7 +77,7 @@ const AppSelect = ({ setShowApp, startApp, openLoad, setShowChange }) => {
       if (global.process.platform === 'phone') {
         const res = window.navigator.clipboard.writeText(JSON.stringify(app))
         if (res) {
-          alert('Guyi app <bold>saved</bold> to clipboard')
+          alert('Guyi app saved to clipboard')
         } else {
           alert('could not copy app to clipboard')
         }
@@ -98,6 +98,9 @@ const AppSelect = ({ setShowApp, startApp, openLoad, setShowChange }) => {
             break
           case 'desk':
             window.Desk.pinShortcut(id, name, icon)
+            break
+          case 'neu':
+            window.guyi.dispatch('pinshortcut',id,name,icon)
             break
           default:
             console.info('Target does not support shortcuts')
@@ -225,6 +228,9 @@ const updateAppStore = async (app) => {
           case 'desk':
             if (!cutExists) window.Desk.pinShortcut(id, name, icon)
             break
+          case 'neu':
+            if(!cutExists)window.guyi.dispatch('pinshortcut',id,name,icon)
+            break
           case 'web':
             let link = window.document.querySelector("link[rel~='icon']")
             if (!link) {
@@ -290,15 +296,18 @@ const App = () => {
   let mutApp = [...app]
 
   React.useEffect(() => {
-    window.__GUYI__ = '0.9.3'
+    window.__GUYI__ = '1.0.0'
     const sendDone = () => {
       try {
-        switch (window.process.platform) {
+        switch (global.process.platform) {
           case 'phone':
             window.Phone.appLoadDone()
             break
           case 'desk':
             window.Desk.appLoadDone()
+            break
+          case 'neu':
+            window.guyi.dispatch('apploaddone')
             break
           case 'web':
             console.info('web does not support load done')
@@ -428,14 +437,16 @@ const App = () => {
     global.process.platform = "phone"
   } else if (global.Desk) {
     global.process.platform = "desk"
-  } else {
+  } else if(global.Neutralino){
+    global.process.platform='neu'
+  }else {
     global.process.platform = "web"
     global.process.os = "web"
   }
 
   let appComp = <div>Load Error</div>
   try {
-    appComp = <Comp tree={mutApp} id={app[1].id} />
+    appComp = <Comp key={app[0].name} tree={mutApp} id={app[1].id} />
   } catch (e) { console.log('App eror', e.message) }
   const LoadArea = () => {
     const [url, _setUrl] = useState(localStorage.getItem('lastsaveaddr') || 'ws://localhost:8080')
